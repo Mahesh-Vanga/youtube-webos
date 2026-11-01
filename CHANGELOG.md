@@ -303,3 +303,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   in hidden categories, and restore focus on Close/Green/Back.
 - Preserve existing framing, zoom and native HDR preference without adding fake
   8K formats or SDR-to-HDR conversion.
+
+# 0.5.7 — unofficial fork, 2026-11-02
+
+- Shortcut-only fix: capture settings color keys early on window and support
+  numeric, named and release-only Green/Red events. Red opens the same panel.
+- Deduplicate down/press/up sequences and held repeats; queue early presses until
+  settings are ready. Update only the remote shortcut hints and release metadata.
+- No changes to playback, video quality, styling, panel layout or other settings.

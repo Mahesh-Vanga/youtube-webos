@@ -1,0 +1,25 @@
+{
+  "packages": [
+    {
+      "id": "youtube.leanback.v4",
+      "title": "YouTube Extended",
+      "iconUri": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/assets/largeIcon.png",
+      "manifest": {
+        "id": "youtube.leanback.v4",
+        "version": "0.5.7",
+        "type": "web",
+        "title": "YouTube Extended",
+        "appDescription": "Unofficial YouTube fork with a transparent Green-button settings panel, ad controls, picture framing/zoom, native HDR preference and sleep timer. HDR and resolution depend on the video and TV.",
+        "iconUri": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/assets/largeIcon.png",
+        "sourceUrl": "https://github.com/Mahesh-Vanga/youtube-webos",
+        "rootRequired": false,
+        "ipkUrl": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/youtube.leanback.v4_0.5.7_all.ipk",
+        "ipkHash": {
+          "sha256": "fdcd86bb250174c2496fac05eb38c9a9c05787a56806b297ea2e9fd103aa6897"
+        },
+        "ipkSize": 486716
+      },
+      "shortDescription": "Transparent Green-button settings with ad controls, zoom and sleep timer."
+    }
+  ]
+}

@@ -282,7 +282,7 @@ export function createSettingsPanel(onClose) {
   const help = element(
     'span',
     '',
-    '↑ ↓ Navigate   ·   ← → Adjust   ·   OK Toggle   ·   Green / Back Close'
+    '↑ ↓ Navigate   ·   ← → Adjust   ·   OK Toggle   ·   Green / Red / Back Close'
   );
   help.id = 'ytaf-settings-help';
   footer.appendChild(help);

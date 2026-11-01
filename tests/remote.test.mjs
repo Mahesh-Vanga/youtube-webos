@@ -84,28 +84,58 @@ async function dialogRuntime() {
     },
     globals: {
       document,
-      __YTAF_VERSION__: '0.5.6',
+      __YTAF_VERSION__: '0.5.7',
       MutationObserver: class {
         observe() {}
       },
       setTimeout: () => 0
     }
   });
+  const windowListeners = new Map();
+  env.context.window.addEventListener = (type, listener) => {
+    if (!windowListeners.has(type)) windowListeners.set(type, []);
+    windowListeners.get(type).push(listener);
+  };
   await env.import('src/ui.js');
   const panel = document.body.children[0];
   const inputs = panel.querySelectorAll('input');
   function key(target, code, extra = {}) {
+    let stopped = false;
     const event = {
       keyCode: code,
       charCode: 0,
       type: 'keydown',
-      preventDefault() {},
-      stopPropagation() {},
-      stopImmediatePropagation() {},
-      ...extra
+      ...extra,
+      preventDefault() {
+        extra.preventDefault?.();
+      },
+      stopPropagation() {
+        stopped = true;
+        extra.stopPropagation?.();
+      },
+      stopImmediatePropagation() {
+        stopped = true;
+        extra.stopImmediatePropagation?.();
+      }
     };
-    for (const listener of target.listeners.get('keydown') || [])
-      listener(event);
+    const emit = (listeners) => {
+      for (const listener of listeners.get(event.type) || []) {
+        if (stopped) break;
+        listener(event);
+      }
+    };
+    emit(windowListeners);
+    if (!stopped) emit(document.listeners);
+    if (!stopped && target !== document) emit(target.listeners);
+    if (event.type === 'keydown' && !extra.keepHeld && !extra.repeat) {
+      key(target, code, {
+        type: 'keyup',
+        key: extra.key,
+        code: extra.code,
+        which: extra.which,
+        charCode: extra.charCode
+      });
+    }
   }
   const tabs = panel
     .querySelectorAll('button')
@@ -120,11 +150,24 @@ async function dialogRuntime() {
 
 test('Green keyCode opens settings and held repeats do not toggle repeatedly', async () => {
   const { document, panel, inputs, key } = await dialogRuntime();
-  key(document, 404);
+  key(document, 404, { keepHeld: true });
   assert.equal(panel.style.display, 'flex');
   assert.equal(document.activeElement, inputs[0]);
   key(document, 404, { repeat: true });
   assert.equal(panel.style.display, 'flex');
+});
+
+test('Red fallback and named Green events open the same unchanged settings panel', async () => {
+  const { document, panel, previous, key } = await dialogRuntime();
+  key(document, 403);
+  assert.equal(panel.style.display, 'flex');
+  key(document, 403);
+  assert.equal(panel.style.display, 'none');
+  assert.equal(document.activeElement, previous);
+  key(document, 0, { key: 'ColorF1Green' });
+  assert.equal(panel.style.display, 'flex');
+  key(document, 0, { code: 'ColorF0Red' });
+  assert.equal(panel.style.display, 'none');
 });
 
 test('D-pad reaches category tabs and Enter toggles once', async () => {

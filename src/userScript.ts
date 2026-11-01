@@ -1,3 +1,4 @@
+import './settings-shortcut.js';
 import 'whatwg-fetch';
 import './domrect-polyfill';
 

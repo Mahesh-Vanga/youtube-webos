@@ -5,7 +5,16 @@ Modified by Mahesh Vanga, 1–2 November 2026. Based on
 original authors' source and GPL-3.0-only license retained. This fork is not
 endorsed by webosbrew, Google/YouTube, Apple, Dolby, or LG.
 
-## Version 0.5.6
+## Version 0.5.7
+
+Shortcut-only maintenance update: **tap Green or Red** to open/close the same
+settings panel. Color keys are captured early on `window`, including numeric,
+named, and release-only events. Holding a button does not repeatedly toggle the
+panel. A press before the panel is ready is queued. Playback, appearance and
+all existing settings are unchanged. After updating, fully close and reopen
+YouTube Extended. Use the `apps-0.5.7.json` Homebrew feed for this build.
+
+### Settings panel from 0.5.6
 
 The **Green** button now opens a centered, transparent glass settings panel over
 the current video, inspired by the supplied settings reference. The title,
@@ -115,7 +124,7 @@ pnpm catalog
 pnpm catalog:check
 ```
 
-Install `youtube.leanback.v4_0.5.6_all.ipk` with webOS Dev Manager or the Homebrew
+Install `youtube.leanback.v4_0.5.7_all.ipk` with webOS Dev Manager or the Homebrew
 Channel. It uses the existing app ID so it updates the installed fork; retain the
 previous IPK if you need to roll back. Local code changes do not update the TV.
 
@@ -124,10 +133,10 @@ The existing feed address remains:
 Publish the matching source, **new IPK and generated apps.json together** to your
 GitHub `main` branch. Until then that URL continues serving the previously
 published version. jsDelivr may cache `@main`; verify the advertised version and
-SHA-256 before installing. The additional version-specific `apps-0.5.6.json` feed
+SHA-256 before installing. The additional version-specific `apps-0.5.7.json` feed
 can be used to avoid a previously cached feed URL. A commit-pinned feed such as
 `@bc12eea/apps.json` stays on its original version. Previous version-specific feeds
-also retain their original release; use `apps-0.5.6.json` for this release.
+also retain their original release; use `apps-0.5.7.json` for this release.
 `pnpm catalog:check` rejects stale version/size/hash metadata.
 
 See [TV validation and rollback](docs/TV-VALIDATION.md) for physical-device checks.

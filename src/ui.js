@@ -1,6 +1,7 @@
 import { configAddChangeListener, configRead } from './config.js';
 import './ui.css';
 import { createSettingsPanel } from './settings-panel.js';
+import { registerSettingsShortcut } from './settings-shortcut.js';
 import { requireElement } from './player_api/helpers';
 
 const colorCodeMap = new Map([
@@ -43,18 +44,11 @@ function showOptionsPanel(visible) {
 }
 
 window.ytaf_showOptionsPanel = showOptionsPanel;
+registerSettingsShortcut(() => showOptionsPanel(!optionsPanelVisible));
 
 const eventHandler = (evt) => {
   const color = getKeyColor(evt.keyCode || evt.which || evt.charCode);
-  if (color === 'green') {
-    evt.preventDefault();
-    evt.stopPropagation();
-
-    if (evt.type === 'keydown' && !evt.repeat) {
-      showOptionsPanel(!optionsPanelVisible);
-    }
-    return false;
-  } else if (color === 'blue' && !optionsPanelVisible) {
+  if (color === 'blue' && !optionsPanelVisible) {
     evt.preventDefault();
     evt.stopPropagation();
 
@@ -228,7 +222,7 @@ initHideLogo();
 
 setTimeout(() => {
   showNotification(
-    'Press [GREEN] to open YTAF configuration screen',
+    'Press [GREEN] or [RED] to open YTAF configuration screen',
     2000,
     'green'
   );
