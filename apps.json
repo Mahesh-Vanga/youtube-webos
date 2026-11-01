@@ -1,0 +1,25 @@
+{
+  "packages": [
+    {
+      "id": "youtube.leanback.v4",
+      "title": "YouTube Extended",
+      "iconUri": "https://raw.githubusercontent.com/Mahesh-Vanga/youtube-webos/main/assets/largeIcon.png",
+      "manifest": {
+        "id": "youtube.leanback.v4",
+        "version": "0.5.3",
+        "type": "web",
+        "title": "YouTube Extended",
+        "appDescription": "YouTube with Apple Liquid Glass theme, Dolby 5.1 Surround, and deep song search.",
+        "iconUri": "https://raw.githubusercontent.com/Mahesh-Vanga/youtube-webos/main/assets/largeIcon.png",
+        "sourceUrl": "https://github.com/Mahesh-Vanga/youtube-webos",
+        "rootRequired": false,
+        "ipkUrl": "https://raw.githubusercontent.com/Mahesh-Vanga/youtube-webos/main/youtube.leanback.v4_0.5.3_all.ipk",
+        "ipkHash": {
+          "sha256": "bed7bf93b7b22fd46d9480ef71b3da8959e2f0b61f7e40a186d1bd617c25a8f3"
+        },
+        "ipkSize": 524494
+      },
+      "shortDescription": "YouTube with Apple Liquid Glass theme, Dolby 5.1 Surround, and deep song search."
+    }
+  ]
+}
