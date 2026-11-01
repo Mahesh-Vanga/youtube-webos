@@ -31,5 +31,6 @@ import './block-webos-cast';
 import './auto-account-select';
 import './beautiful-theme.css';
 import './dolby-audio';
+import './resolution-8k';
 import './feed-prioritization';
 import './search-enhancer';

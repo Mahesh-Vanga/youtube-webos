@@ -9,17 +9,17 @@
         "version": "0.5.3",
         "type": "web",
         "title": "YouTube Extended",
-        "appDescription": "YouTube with Apple Liquid Glass theme, Dolby 5.1 Surround, and deep song search.",
+        "appDescription": "YouTube with Apple Liquid Glass theme, Dolby 5.1 Surround, 120Hz refresh rate, 8K stream unlocking, and deep song search.",
         "iconUri": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/assets/largeIcon.png",
         "sourceUrl": "https://github.com/Mahesh-Vanga/youtube-webos",
         "rootRequired": false,
         "ipkUrl": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/youtube.leanback.v4_0.5.3_all.ipk",
         "ipkHash": {
-          "sha256": "9e75e43dfb254fbb52d3a395d1cb0673468758cf8b512d4acb88d7b3b64dd52a"
+          "sha256": "58e18f8d81e14ddcd18233e1710175ff11f3ee19acf23947890336e2d2a78cf9"
         },
-        "ipkSize": 463174
+        "ipkSize": 464344
       },
-      "shortDescription": "YouTube with Apple Liquid Glass theme, Dolby 5.1 Surround, and deep song search."
+      "shortDescription": "YouTube with Apple Liquid Glass theme, Dolby 5.1 Surround, 120Hz, and 8K playback."
     }
   ]
 }

@@ -59,8 +59,8 @@ const configOptions = new Map([
   [
     'forceHighResVideo',
     {
-      default: false,
-      desc: 'Force max resolution video playback'
+      default: true,
+      desc: 'Force 8K / 4K max resolution playback'
     }
   ],
   [
