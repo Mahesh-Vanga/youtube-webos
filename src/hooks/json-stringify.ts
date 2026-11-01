@@ -17,20 +17,26 @@ function stringify(
   space?: string | number
 ): string {
   if (!isPrimitive(value)) {
-    value = structuredClone(value);
-
-    // @ts-expect-error TS doesn't allow optional chaining on `unknown`.
-    const ctx = value?.playbackContext?.contentPlaybackContext as unknown;
-    if (!isPrimitive(ctx)) {
-      (ctx as Record<string, unknown>).isInlinePlaybackNoAd = true;
-      console.info(`[JSON.stringify] Set isInlinePlaybackNoAd`);
+    // Avoid expensive structuredClone: shallow copy if frozen, else modify in-place
+    if (Object.isFrozen(value)) {
+      value = { ...(value as Record<string, unknown>) };
     }
 
-    // Inject Dolby Audio / 5.1 Surround capabilities into playback and client contexts
+    // @ts-expect-error TS doesn't allow optional chaining on unknown
+    let ctx = value?.playbackContext?.contentPlaybackContext as unknown;
+    if (!isPrimitive(ctx)) {
+      if (Object.isFrozen(ctx)) {
+        ctx = { ...(ctx as Record<string, unknown>) };
+        (value as any).playbackContext.contentPlaybackContext = ctx;
+      }
+      (ctx as Record<string, unknown>).isInlinePlaybackNoAd = true;
+    }
+
+    // Inject Dolby Audio / 5.1 Surround capabilities into playback context
     try {
       value = injectDolbyContext(value);
-    } catch (e) {
-      console.warn('[JSON.stringify] Failed to inject Dolby context:', e);
+    } catch {
+      // Ignore
     }
   }
 

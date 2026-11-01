@@ -1,8 +1,5 @@
 import { configRead } from './config';
 
-/**
- * Fast view count parser: "1.2M views", "450K views", "2.5B views"
- */
 export function parseViewCount(text: string): number {
   if (!text) return 0;
   const match = text.match(/([\d,.]+)\s*([KkMmBb])?\s*views?/i);
@@ -19,16 +16,11 @@ export function parseViewCount(text: string): number {
   return count;
 }
 
-/**
- * Fast, non-blocking view count extractor using direct object paths.
- * Avoids JSON.stringify to keep 60 FPS performance on TV CPUs.
- */
 function extractItemViewCount(item: any): number {
   if (!item) return 0;
   const tile = item.tileRenderer || item.compactVideoRenderer || item.tvVideoRenderer;
   if (!tile) return 0;
 
-  // Check tile lines
   const lines = tile.metadata?.tileMetadataRenderer?.lines;
   if (Array.isArray(lines)) {
     for (let i = 0; i < lines.length; i++) {
@@ -45,7 +37,6 @@ function extractItemViewCount(item: any): number {
     }
   }
 
-  // Check viewCountText or shortViewCountText
   const viewText =
     tile.viewCountText?.runs?.[0]?.text ||
     tile.viewCountText?.simpleText ||
@@ -59,9 +50,6 @@ function extractItemViewCount(item: any): number {
   return 0;
 }
 
-/**
- * Extracts shelf title text.
- */
 function getShelfTitle(shelfItem: any): string {
   const shelf = shelfItem?.shelfRenderer || shelfItem;
   if (!shelf) return '';
@@ -83,12 +71,6 @@ function getShelfTitle(shelfItem: any): string {
   );
 }
 
-/**
- * Determines shelf category priority:
- * 1. Music (1000)
- * 2. News (800)
- * 3. Others (Trending, Gaming, etc.)
- */
 function getShelfScore(shelfItem: any): number {
   const title = getShelfTitle(shelfItem).toLowerCase();
   if (!title) return 100;
@@ -120,9 +102,6 @@ function getShelfScore(shelfItem: any): number {
   return 100;
 }
 
-/**
- * Sorts items inside a shelf by view count descending.
- */
 function sortShelfItemsByViewCount(items: any[]): any[] {
   if (!Array.isArray(items) || items.length <= 1) return items;
 
@@ -131,14 +110,14 @@ function sortShelfItemsByViewCount(items: any[]): any[] {
   });
 }
 
-/**
- * Fast, non-blocking feed prioritization.
- */
+let hasSortedHomeFeed = false;
+
 export function prioritizeHomeFeed(data: any): any {
   if (!data || typeof data !== 'object') return data;
   if (!configRead('enableFeedPrioritization')) return data;
 
-  // FAST GUARD: Only process if it has tvBrowseRenderer (browse responses)
+  // Ultra-fast exit: Once the initial home feed is sorted, return immediately
+  // Never re-sort during scrolling to maintain 60 FPS butter-smooth navigation
   const sectionListRenderer =
     data?.contents?.tvBrowseRenderer?.content?.tvSurfaceContentRenderer?.content
       ?.sectionListRenderer;
@@ -147,13 +126,16 @@ export function prioritizeHomeFeed(data: any): any {
     return data;
   }
 
+  if (hasSortedHomeFeed) {
+    return data;
+  }
+  hasSortedHomeFeed = true;
+
   try {
-    // 1. Re-order shelves: Music first, then News, etc.
     sectionListRenderer.contents.sort((a: any, b: any) => {
       return getShelfScore(b) - getShelfScore(a);
     });
 
-    // 2. Sort items inside each shelf by view count
     for (let i = 0; i < sectionListRenderer.contents.length; i++) {
       const shelf = sectionListRenderer.contents[i]?.shelfRenderer;
       if (Array.isArray(shelf?.content?.horizontalListRenderer?.items)) {
@@ -169,7 +151,6 @@ export function prioritizeHomeFeed(data: any): any {
   return data;
 }
 
-// Hook into JSON.parse with zero overhead for non-browse requests
 const origParse = JSON.parse;
 JSON.parse = function () {
   const r = origParse.apply(this, arguments as any);

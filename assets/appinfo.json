@@ -13,6 +13,8 @@
   "splashBackground": "splashBackground-v1.png",
   "imageForRecents": "imageForRecents.png",
   "bgImage": "bgImage.png",
+  "resolution": "1920x1080",
+  "uiRevision": "2",
   "support360Content": true,
   "checkUpdateOnLaunch": false,
   "accessibility": {

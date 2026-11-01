@@ -1,5 +1,3 @@
-/*global navigate, __YTAF_VERSION__*/
-import './spatial-navigation-polyfill.js';
 import {
   configAddChangeListener,
   configRead,
@@ -10,35 +8,21 @@ import './ui.css';
 import './beautiful-theme.css';
 import { requireElement } from './player_api/helpers';
 
-// We handle key events ourselves.
-window.__spatialNavigation__.keyMode = 'NONE';
-
-const ARROW_KEY_CODE = { 37: 'left', 38: 'up', 39: 'right', 40: 'down' };
-
 const colorCodeMap = new Map([
   [403, 'red'],
-
   [404, 'green'],
   [172, 'green'],
-
   [405, 'yellow'],
   [170, 'yellow'],
-
   [406, 'blue'],
   [167, 'blue'],
   [191, 'blue']
 ]);
 
-/**
- * Returns the name of the color button associated with a code or null if not a color button.
- * @param {number} charCode KeyboardEvent.charCode property from event
- * @returns {string | null} Color name or null
- */
 function getKeyColor(charCode) {
   if (colorCodeMap.has(charCode)) {
     return colorCodeMap.get(charCode);
   }
-
   return null;
 }
 
@@ -47,7 +31,6 @@ function createConfigCheckbox(key) {
   elmInput.type = 'checkbox';
   elmInput.checked = configRead(key);
 
-  /** @type {(evt: Event) => void} */
   const changeHandler = (evt) => {
     configWrite(key, evt.target.checked);
   };
@@ -60,7 +43,6 @@ function createConfigCheckbox(key) {
 
   const elmLabel = document.createElement('label');
   elmLabel.appendChild(elmInput);
-  // Use non-breaking space (U+00A0)
   elmLabel.appendChild(document.createTextNode('\u00A0' + configGetDesc(key)));
 
   return elmLabel;
@@ -74,42 +56,28 @@ function createOptionsPanel() {
   elmContainer.setAttribute('tabindex', 0);
 
   elmContainer.addEventListener(
-    'focus',
-    () => console.debug('Options panel focused!'),
-    true
-  );
-  elmContainer.addEventListener(
-    'blur',
-    () => console.debug('Options panel blurred!'),
-    true
-  );
-
-  elmContainer.addEventListener(
     'keydown',
     (evt) => {
-      console.debug('Options panel key event:', evt.type, evt.charCode);
-
       if (getKeyColor(evt.charCode) === 'green') {
         return;
       }
 
-      if (evt.keyCode in ARROW_KEY_CODE) {
-        navigate(ARROW_KEY_CODE[evt.keyCode]);
+      // Fast, lightweight arrow navigation inside the options dialog
+      if ([37, 38, 39, 40].includes(evt.keyCode)) {
+        const inputs = Array.from(elmContainer.querySelectorAll('input'));
+        const activeIdx = inputs.indexOf(document.activeElement);
+        if (evt.keyCode === 38 || evt.keyCode === 37) {
+          // Up / Left
+          inputs[(activeIdx - 1 + inputs.length) % inputs.length]?.focus();
+        } else if (evt.keyCode === 40 || evt.keyCode === 39) {
+          // Down / Right
+          inputs[(activeIdx + 1) % inputs.length]?.focus();
+        }
       } else if (evt.keyCode === 13) {
-        // "OK" button
-
-        /**
-         * The YouTube app generates these "OK" events from clicks (including
-         * with the Magic Remote), and we don't want to send a duplicate click
-         * event for those. Youtube uses the `Event` class instead of
-         * `KeyboardEvent` so we check for that.
-         * See issue #143 and #200 for context.
-         */
         if (evt instanceof KeyboardEvent) {
           document.activeElement.click();
         }
       } else if (evt.keyCode === 27) {
-        // Back button
         showOptionsPanel(false);
       }
 
@@ -169,20 +137,14 @@ document.body.appendChild(optionsPanel);
 
 let optionsPanelVisible = false;
 
-/**
- * Show or hide the options panel.
- * @param {boolean} [visible=true] Whether to show the options panel.
- */
 function showOptionsPanel(visible) {
   visible ??= true;
 
   if (visible && !optionsPanelVisible) {
-    console.debug('Showing and focusing options panel!');
     optionsPanel.style.display = 'block';
     optionsPanel.focus();
     optionsPanelVisible = true;
   } else if (!visible && optionsPanelVisible) {
-    console.debug('Hiding options panel!');
     optionsPanel.style.display = 'none';
     optionsPanel.blur();
     optionsPanelVisible = false;
@@ -197,7 +159,6 @@ const eventHandler = (evt) => {
     evt.stopPropagation();
 
     if (evt.type === 'keydown') {
-      // Toggle visibility.
       showOptionsPanel(!optionsPanelVisible);
     }
     return false;
@@ -206,7 +167,6 @@ const eventHandler = (evt) => {
     evt.stopPropagation();
 
     if (evt.type === 'keydown') {
-      // Toggle Audio-Only mode.
       initAudioOnlyToggle();
     }
     return false;
@@ -229,7 +189,6 @@ const COLOR_MAP = {
 
 export function showNotification(text, time = 3000, color = 'grey') {
   if (!document.querySelector('.ytaf-notification-container')) {
-    console.debug('Adding notification container');
     const c = document.createElement('div');
     c.classList.add('ytaf-notification-container');
     document.body.appendChild(c);
@@ -255,14 +214,10 @@ export function showNotification(text, time = 3000, color = 'grey') {
   }, time);
 }
 
-/**
- * Initialize ability to hide YouTube logo in top right corner.
- */
 function initHideLogo() {
   const style = document.createElement('style');
   document.head.appendChild(style);
 
-  /** @type {(hide: boolean) => void} */
   const setHidden = (hide) => {
     const visibility = hide ? 'hidden' : 'visible';
     style.textContent = `ytlr-redux-connect-ytlr-logo-entity { visibility: ${visibility}; }`;
