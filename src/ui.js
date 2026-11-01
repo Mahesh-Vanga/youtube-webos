@@ -192,17 +192,7 @@ function showOptionsPanel(visible) {
 window.ytaf_showOptionsPanel = showOptionsPanel;
 
 const eventHandler = (evt) => {
-  console.debug(
-    'Key event:',
-    evt.type,
-    evt.charCode,
-    evt.keyCode,
-    evt.defaultPrevented
-  );
-
   if (getKeyColor(evt.charCode) === 'green') {
-    console.debug('Taking over!');
-
     evt.preventDefault();
     evt.stopPropagation();
 

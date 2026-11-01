@@ -1,209 +1,118 @@
 /* ==========================================================================
-   YouTube webOS - Ultra-Fast Apple Liquid Glass Theme (Performance Optimized)
-   Hardware-accelerated 60 FPS rendering without GPU bottleneck or black bars
+   YouTube webOS - Ultra-Fast Zero-Lag Apple Glass Theme
+   Zero animation delay, zero layout shift, instant 60fps remote navigation
    ========================================================================== */
 
-:root {
-  --apple-glass-card-bg: rgba(255, 255, 255, 0.06);
-  --apple-glass-card-focus: rgba(255, 255, 255, 0.16);
-  --apple-glass-border: rgba(255, 255, 255, 0.14);
-  --apple-glass-border-top: rgba(255, 255, 255, 0.32);
-  --apple-glass-border-focus: rgba(255, 255, 255, 0.9);
-  --apple-glass-glow: rgba(0, 122, 255, 0.4);
-  --apple-radius-pill: 9999px;
-  --apple-radius-card: 16px;
-  --apple-radius-sheet: 22px;
-}
-
-/* 1. Base App Background: Pure OLED Black for 0ms compositing latency */
+/* 1. Canvas Background: Deep OLED True Black */
 body,
 html,
 #content,
 .ytlr-app,
 ytlr-app {
-  background-color: #07080c !important;
+  background-color: #000000 !important;
   color: #f5f5f7 !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif !important;
-  -webkit-font-smoothing: antialiased !important;
 }
 
-/* 2. Navigation Sidebar: Sleek Apple Translucent Panel */
-ytlr-guide-renderer,
-.ytlr-guide-renderer,
-[idomkey='guide-renderer'] {
-  background: rgba(14, 16, 24, 0.88) !important;
-  border-right: 1px solid var(--apple-glass-border) !important;
-}
-
-ytlr-guide-entry-renderer,
-.ytlr-guide-entry-renderer,
-[idomkey='guide-entry-renderer'] {
-  border-radius: 14px !important;
-  margin: 0.25rem 0.5rem !important;
-  transition: transform 0.18s ease, background 0.18s ease !important;
-}
-
-ytlr-guide-entry-renderer.zylon-focus,
-.ytlr-guide-entry-renderer.zylon-focus,
-[idomkey='guide-entry-renderer'].zylon-focus {
-  background: rgba(255, 255, 255, 0.18) !important;
-  border: 1px solid var(--apple-glass-border-focus) !important;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4) !important;
-  transform: translateX(4px) scale(1.02) !important;
-}
-
-/* 3. Video Cards & Tiles: Apple Translucent Glass with Specular Light */
-/* Note: Avoid backdrop-filter on repeating grid cards to guarantee 60 FPS on TV GPU */
+/* 2. Instant Zero-Lag Focus for Remote Navigation (No transitions, 0ms delay) */
 ytlr-tile-renderer,
 .ytlr-tile-renderer,
-.ytlr-tile-header-renderer,
-ytlr-tile-header-renderer,
-[idomkey='tile-renderer'],
-[idomkey='compact-video-renderer'] {
-  border-radius: var(--apple-radius-card) !important;
-  border: 1px solid var(--apple-glass-border) !important;
-  border-top: 1px solid var(--apple-glass-border-top) !important;
-  background: var(--apple-glass-card-bg) !important;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45) !important;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease !important;
-  overflow: hidden !important;
-  will-change: transform;
+[idomkey='tile-renderer'] {
+  border-radius: 12px !important;
+  transition: none !important;
 }
 
-/* Card Thumbnail Images */
-ytlr-tile-renderer img,
-.ytlr-tile-header-renderer img,
-ytlr-tile-header-renderer img,
-[idomkey='thumbnail'] img {
-  border-radius: calc(var(--apple-radius-card) - 2px) !important;
-}
-
-/* Focused Card: VisionOS Floating Focus */
+/* Instant Crisp Focus Highlight - Never changes layout geometry */
 ytlr-tile-renderer.zylon-focus,
 .ytlr-tile-renderer.zylon-focus,
 [idomkey='tile-renderer'].zylon-focus,
-[idomkey='compact-video-renderer'].zylon-focus,
 .focused-item {
-  transform: scale(1.045) translateY(-4px) !important;
-  background: var(--apple-glass-card-focus) !important;
-  border: 1.5px solid var(--apple-glass-border-focus) !important;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7), 0 0 22px rgba(255, 255, 255, 0.3) !important;
-  z-index: 50 !important;
+  outline: 3px solid #ffffff !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 18px rgba(0, 122, 255, 0.7) !important;
+  transition: none !important;
+  z-index: 20 !important;
 }
 
-/* 4. Filter Chips & Categories: Glass Capsules */
+/* 3. Category Chips: Clean Frosted Glass Capsules */
 [idomkey='chip-cloud-chip-renderer'],
 .ytlr-chip-cloud-chip-renderer {
-  border-radius: var(--apple-radius-pill) !important;
+  border-radius: 9999px !important;
   background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid var(--apple-glass-border) !important;
-  border-top: 1px solid var(--apple-glass-border-top) !important;
-  transition: transform 0.18s ease, background 0.18s ease !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  transition: none !important;
 }
 
 [idomkey='chip-cloud-chip-renderer'].zylon-focus,
 .ytlr-chip-cloud-chip-renderer.zylon-focus {
   background: rgba(255, 255, 255, 0.28) !important;
   border-color: #ffffff !important;
-  box-shadow: 0 0 16px rgba(255, 255, 255, 0.35) !important;
-  transform: scale(1.06) !important;
+  outline: 2px solid #ffffff !important;
+  transition: none !important;
 }
 
-/* 5. Player Controls: Clean Transparent Gradient (NO BLACK BARS) */
-/* Keep YouTube's native shadow layer seamless and transparent to prevent black bar glitch */
-.ytLrWatchDefaultShadow,
-[idomkey='shadow'] {
-  background: transparent !important;
-}
+/* 4. Player Controls: DO NOT ALTER NATIVE SIZING OR POSITIONING */
+/* All native positions, heights, margins, and flex coordinates are preserved */
 
-/* Progress bar container: Smooth pill shape */
-.ytlr-progress-bar-renderer {
-  height: 6px !important;
-  border-radius: var(--apple-radius-pill) !important;
-  background: rgba(255, 255, 255, 0.25) !important;
-  transition: height 0.18s ease !important;
-}
-
-.ytlr-progress-bar-renderer.zylon-focus {
-  height: 10px !important;
-  box-shadow: 0 0 14px rgba(255, 255, 255, 0.5) !important;
-}
-
-/* Apple Scrubber Glow Fill */
-[idomkey='slider-progress'] {
-  background: linear-gradient(90deg, #007aff 0%, #30d158 50%, #ffffff 100%) !important;
-  border-radius: var(--apple-radius-pill) !important;
-}
-
-/* 6. Dolby Audio 5.1 Metallic Glass Pill */
+/* 5. Dolby Audio Badge (Subtle Pill in Options) */
 .ytaf-dolby-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0.75rem;
-  background: rgba(0, 122, 255, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  background: rgba(0, 122, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   color: #ffffff;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 800;
-  letter-spacing: 1.2px;
-  border-radius: var(--apple-radius-pill);
-  box-shadow: 0 4px 14px rgba(0, 122, 255, 0.4);
+  letter-spacing: 1px;
+  border-radius: 6px;
   text-transform: uppercase;
-  margin-left: 0.8rem;
+  margin-left: 0.6rem;
   vertical-align: middle;
 }
 
-/* 7. Settings Panel (Options Screen) - High-Def Glass Sheet */
+/* 6. Settings Screen (Options Panel) */
 .ytaf-ui-container {
-  background: rgba(18, 20, 30, 0.92) !important;
-  backdrop-filter: blur(28px) !important;
-  -webkit-backdrop-filter: blur(28px) !important;
-  border: 1px solid var(--apple-glass-border-top) !important;
-  border-radius: var(--apple-radius-sheet) !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(255, 255, 255, 0.12) !important;
-  padding: 2.2rem 2.8rem !important;
+  background: rgba(16, 18, 28, 0.94) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8) !important;
+  padding: 2rem 2.5rem !important;
 }
 
 .ytaf-ui-container h1 {
   color: #ffffff !important;
   font-weight: 700 !important;
-  letter-spacing: -0.5px !important;
-  margin-bottom: 1.2rem !important;
-  font-size: 2rem !important;
+  margin-bottom: 1rem !important;
+  font-size: 1.8rem !important;
 }
 
 .ytaf-ui-container label {
-  padding: 0.65rem 1.1rem !important;
-  border-radius: 12px !important;
-  margin: 0.35rem 0 !important;
-  transition: transform 0.18s ease, background 0.18s ease !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 10px !important;
+  margin: 0.3rem 0 !important;
   display: flex !important;
   align-items: center !important;
   background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid var(--apple-glass-border) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .ytaf-ui-container label:hover,
 .ytaf-ui-container label:focus-within,
 .ytaf-ui-container :focus {
-  outline: none !important;
-  background: rgba(255, 255, 255, 0.22) !important;
-  border-color: #ffffff !important;
-  box-shadow: 0 0 16px rgba(255, 255, 255, 0.3) !important;
-  transform: translateX(4px) !important;
+  outline: 2px solid #ffffff !important;
+  background: rgba(255, 255, 255, 0.2) !important;
 }
 
-/* 8. Notification Capsule */
+/* 7. Notifications */
 .ytaf-notification-container .message {
-  background: rgba(20, 22, 32, 0.85) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid var(--apple-glass-border-top) !important;
-  border-radius: var(--apple-radius-pill) !important;
+  background: rgba(18, 20, 30, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 9999px !important;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
-  padding: 0.85rem 1.6rem !important;
+  padding: 0.75rem 1.4rem !important;
   font-weight: 600 !important;
   color: #ffffff !important;
 }
