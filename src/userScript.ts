@@ -18,6 +18,7 @@ import './hooks/json-stringify';
 import './shorts.js';
 import './sponsorblock.js';
 import './ui.js';
+import './sleep-timer';
 import './font-fix.css';
 import './thumbnail-quality';
 import './screensaver-fix';

@@ -290,3 +290,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Optional preference for playable formats explicitly labelled HDR. SDR-only
   sources remain SDR; automatic playback is restored between videos as needed.
 - Version-specific Homebrew feed to avoid previously cached repository addresses.
+
+# 0.5.6 — unofficial fork, 2026-11-02
+
+- Replace the long Green-button settings list with a centered translucent glass
+  panel, pinned title/footer and Ads & skips/Picture/Appearance/Extras categories.
+- Keep ad blocking and indented SponsorBlock controls first, matching the supplied
+  reference. Apply SponsorBlock setting changes to the current video immediately.
+- Add panel transparency choices, a session-only sleep timer that pauses playback,
+  and source-resolution/dropped-frame details where provided by the video engine.
+- Trap remote events before the underlying player handles them, disable controls
+  in hidden categories, and restore focus on Close/Green/Back.
+- Preserve existing framing, zoom and native HDR preference without adding fake
+  8K formats or SDR-to-HDR conversion.

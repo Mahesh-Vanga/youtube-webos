@@ -5,7 +5,33 @@ Modified by Mahesh Vanga, 1–2 November 2026. Based on
 original authors' source and GPL-3.0-only license retained. This fork is not
 endorsed by webosbrew, Google/YouTube, Apple, Dolby, or LG.
 
-## Version 0.5.5
+## Version 0.5.6
+
+The **Green** button now opens a centered, transparent glass settings panel over
+the current video, inspired by the supplied settings reference. The title,
+category buttons and remote-control hints stay visible while settings scroll.
+No full-screen blur, scrolling filters or animation loops are added.
+
+- **Ads & skips** opens first, with ad blocking and SponsorBlock followed by
+  indented segment-category checkboxes. SponsorBlock on/off and category changes
+  now update the current video rather than waiting for a new video.
+- **Picture** contains highest playable quality, native HDR preference, framing,
+  zoom and reset. Source resolution and genuine HDR/8K limits remain unchanged.
+- **Appearance** contains panel transparency (more transparent/balanced/more
+  contrast), optional frosted blur, the glass theme, clock and thumbnails.
+- **Extras** contains a 15/30/60/90/120-minute **sleep timer**, source-video details
+  and the remaining browsing settings. The timer pauses playback, never powers
+  off the TV, and always resets to Off when the app starts again. Video details
+  show actual source dimensions and dropped frames when the engine provides them.
+
+Use **Up** from the first row to focus a category, **Left/Right** to change
+categories, then **Down** to enter that category. Up/Down moves between rows;
+Left/Right adjusts values or sets checkboxes off/on. **OK** toggles/cycles.
+**Green**, TV **Back**, or **Close** dismisses the panel and restores focus.
+Remote events are captured while the panel is open so they do not seek or
+navigate the player behind it. The panel opens on Ads & skips each time.
+
+### Retained picture controls from 0.5.5
 
 Press **Green** to open settings for ad blocking, SponsorBlock and picture controls.
 
@@ -89,7 +115,7 @@ pnpm catalog
 pnpm catalog:check
 ```
 
-Install `youtube.leanback.v4_0.5.5_all.ipk` with webOS Dev Manager or the Homebrew
+Install `youtube.leanback.v4_0.5.6_all.ipk` with webOS Dev Manager or the Homebrew
 Channel. It uses the existing app ID so it updates the installed fork; retain the
 previous IPK if you need to roll back. Local code changes do not update the TV.
 
@@ -98,9 +124,10 @@ The existing feed address remains:
 Publish the matching source, **new IPK and generated apps.json together** to your
 GitHub `main` branch. Until then that URL continues serving the previously
 published version. jsDelivr may cache `@main`; verify the advertised version and
-SHA-256 before installing. The additional version-specific `apps-0.5.5.json` feed
+SHA-256 before installing. The additional version-specific `apps-0.5.6.json` feed
 can be used to avoid a previously cached feed URL. A commit-pinned feed such as
-`@bc12eea/apps.json` stays on its original version and will not update to 0.5.5.
+`@bc12eea/apps.json` stays on its original version. Previous version-specific feeds
+also retain their original release; use `apps-0.5.6.json` for this release.
 `pnpm catalog:check` rejects stale version/size/hash metadata.
 
 See [TV validation and rollback](docs/TV-VALIDATION.md) for physical-device checks.

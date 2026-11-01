@@ -1,5 +1,5 @@
 import sha256 from 'tiny-sha256';
-import { configRead } from './config';
+import { configRead, configAddChangeListener } from './config';
 import { showNotification } from './ui';
 
 // Copied from https://github.com/ajayyy/SponsorBlock/blob/9392d16617d2d48abb6125c00e2ff6042cb7bebe/src/config.ts#L179-L233
@@ -249,7 +249,7 @@ class SponsorBlockHandler {
     clearTimeout(this.nextSkipTimeout);
     this.nextSkipTimeout = null;
 
-    if (!this.active) {
+    if (!this.active || !configRead('enableSponsorBlock')) {
       console.debug(this.videoID, 'No longer active, ignoring...');
       return;
     }
@@ -264,6 +264,7 @@ class SponsorBlockHandler {
     // and, in worst case, perform a skip at negative interval (immediately)...
     const nextSegments = this.segments.filter(
       (seg) =>
+        this.skippableCategories.includes(seg.category) &&
         seg.segment[0] > this.video.currentTime - 0.3 &&
         seg.segment[1] > this.video.currentTime - 0.3
     );
@@ -372,44 +373,40 @@ function uninitializeSponsorblock() {
   window.sponsorblock = null;
 }
 
-window.addEventListener(
-  'hashchange',
-  () => {
-    const newURL = new URL(location.hash.substring(1), location.href);
-    // uninitialize sponsorblock when not on `/watch` path, to prevent
-    // it from attaching to playback preview video element loaded on
-    // home page
-    if (newURL.pathname !== '/watch' && window.sponsorblock) {
-      console.debug('uninitializing sponsorblock on a non-video page');
-      uninitializeSponsorblock();
-      return;
-    }
+function syncSponsorblock() {
+  const newURL = new URL(location.hash.substring(1), location.href);
+  const videoID = newURL.searchParams.get('v');
+  if (
+    newURL.pathname !== '/watch' ||
+    !videoID ||
+    !configRead('enableSponsorBlock')
+  ) {
+    uninitializeSponsorblock();
+    return;
+  }
+  if (window.sponsorblock?.videoID === videoID) return;
+  uninitializeSponsorblock();
+  window.sponsorblock = new SponsorBlockHandler(videoID);
+  window.sponsorblock.init().catch((err) => {
+    console.warn('SponsorBlock unavailable for this video:', err);
+  });
+}
 
-    const videoID = newURL.searchParams.get('v');
-    const needsReload =
-      videoID &&
-      (!window.sponsorblock || window.sponsorblock.videoID != videoID);
-
-    console.debug(
-      'hashchange',
-      videoID,
-      window.sponsorblock,
-      window.sponsorblock ? window.sponsorblock.videoID : null,
-      needsReload
-    );
-
-    if (needsReload) {
-      uninitializeSponsorblock();
-
-      if (configRead('enableSponsorBlock')) {
-        window.sponsorblock = new SponsorBlockHandler(videoID);
-        window.sponsorblock.init().catch((err) => {
-          console.warn('SponsorBlock unavailable for this video:', err);
-        });
-      } else {
-        console.info('SponsorBlock disabled, not loading');
-      }
-    }
-  },
-  false
-);
+window.addEventListener('hashchange', syncSponsorblock, false);
+configAddChangeListener('enableSponsorBlock', syncSponsorblock);
+for (const key of [
+  'enableSponsorBlockSponsor',
+  'enableSponsorBlockIntro',
+  'enableSponsorBlockOutro',
+  'enableSponsorBlockInteraction',
+  'enableSponsorBlockSelfPromo',
+  'enableSponsorBlockMusicOfftopic',
+  'enableSponsorBlockPreview'
+]) {
+  configAddChangeListener(key, () => {
+    const handler = window.sponsorblock;
+    if (!handler) return;
+    handler.skippableCategories = handler.getSkippableCategories();
+    if (handler.video && handler.segments) handler.scheduleSkip();
+  });
+}

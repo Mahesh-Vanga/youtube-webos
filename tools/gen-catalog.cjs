@@ -10,7 +10,7 @@ const binary = fs.readFileSync(path.join(root, filename));
 const repository = pkg.repository.replace(/^github:/, '');
 const cdn = `https://cdn.jsdelivr.net/gh/${repository}@main`;
 const description =
-  'Unofficial YouTube fork with glass styling, video framing/zoom, native HDR preference and music-first browsing. HDR and resolution depend on the video and TV.';
+  'Unofficial YouTube fork with a transparent Green-button settings panel, ad controls, picture framing/zoom, native HDR preference and sleep timer. HDR and resolution depend on the video and TV.';
 const catalog = {
   packages: [
     {
@@ -33,7 +33,7 @@ const catalog = {
         ipkSize: binary.length
       },
       shortDescription:
-        'Glass YouTube with picture framing, zoom and native HDR preference.'
+        'Transparent Green-button settings with ad controls, zoom and sleep timer.'
     }
   ]
 };

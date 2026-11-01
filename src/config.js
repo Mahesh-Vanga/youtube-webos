@@ -98,6 +98,18 @@ const configOptions = new Map([
     }
   ],
   [
+    'panelTransparency',
+    {
+      default: 'balanced',
+      desc: 'Panel transparency',
+      values: ['clear', 'balanced', 'solid']
+    }
+  ],
+  [
+    'sleepTimerMinutes',
+    { default: 0, desc: 'Sleep timer', values: [0, 15, 30, 60, 90, 120] }
+  ],
+  [
     'enableGlassBlur',
     {
       default: false,
@@ -164,6 +176,8 @@ function loadStoredConfig() {
     // Reset the old forced bitrate default once, then retain user choices.
     if (stored.settingsRevision !== 1) values.forceHighResVideo = false;
     values.settingsRevision = 1;
+    // A previous session must never silently restart a playback timer.
+    values.sleepTimerMinutes = 0;
     return values;
   } catch (err) {
     console.warn('Error parsing stored config:', err);
@@ -219,6 +233,7 @@ export function configWrite(key, value) {
 
   const oldValue =
     localConfig[key] !== undefined ? localConfig[key] : defaultConfig[key];
+  if (oldValue === value) return;
 
   console.info('Changing key', key, 'from', oldValue, 'to', value);
   localConfig[key] = value;

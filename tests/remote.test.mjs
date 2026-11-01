@@ -12,6 +12,7 @@ async function dialogRuntime() {
       this.children = [];
       this.style = {};
       this.listeners = new Map();
+      this.attributes = new Map();
       this.isConnected = true;
       const classes = new Set();
       this.classList = {
@@ -20,7 +21,12 @@ async function dialogRuntime() {
         contains: (name) => classes.has(name)
       };
     }
-    setAttribute() {}
+    setAttribute(key, value) {
+      this.attributes.set(key, value);
+    }
+    getAttribute(key) {
+      return this.attributes.get(key);
+    }
     appendChild(child) {
       this.children.push(child);
       return child;
@@ -28,6 +34,11 @@ async function dialogRuntime() {
     addEventListener(type, callback) {
       if (!this.listeners.has(type)) this.listeners.set(type, []);
       this.listeners.get(type).push(callback);
+    }
+    dispatchEvent(event) {
+      for (const listener of this.listeners.get(event.type) || [])
+        listener.call(this, event);
+      return true;
     }
     matches(selector) {
       return selector.split(',').some((value) => this.tagName === value.trim());
@@ -68,11 +79,12 @@ async function dialogRuntime() {
   const env = runtime({
     stubs: {
       'src/ui.css': {},
+      'src/settings-panel.css': {},
       'src/player_api/helpers.ts': { requireElement: () => {} }
     },
     globals: {
       document,
-      __YTAF_VERSION__: '0.5.5',
+      __YTAF_VERSION__: '0.5.6',
       MutationObserver: class {
         observe() {}
       },
@@ -89,28 +101,37 @@ async function dialogRuntime() {
       type: 'keydown',
       preventDefault() {},
       stopPropagation() {},
+      stopImmediatePropagation() {},
       ...extra
     };
     for (const listener of target.listeners.get('keydown') || [])
       listener(event);
   }
-  return { env, document, previous, panel, inputs, key };
+  const tabs = panel
+    .querySelectorAll('button')
+    .filter((button) => button.getAttribute('role') === 'tab');
+  const pages = panel.querySelectorAll('section');
+  const control = (name) =>
+    panel
+      .querySelectorAll('input, button')
+      .find((node) => node.getAttribute('data-setting') === name);
+  return { env, document, previous, panel, inputs, tabs, pages, control, key };
 }
 
 test('Green keyCode opens settings and held repeats do not toggle repeatedly', async () => {
   const { document, panel, inputs, key } = await dialogRuntime();
   key(document, 404);
-  assert.equal(panel.style.display, 'block');
+  assert.equal(panel.style.display, 'flex');
   assert.equal(document.activeElement, inputs[0]);
   key(document, 404, { repeat: true });
-  assert.equal(panel.style.display, 'block');
+  assert.equal(panel.style.display, 'flex');
 });
 
-test('D-pad wraps through all settings and Enter toggles once', async () => {
-  const { document, panel, inputs, key } = await dialogRuntime();
+test('D-pad reaches category tabs and Enter toggles once', async () => {
+  const { document, panel, inputs, tabs, key } = await dialogRuntime();
   key(document, 404);
   key(panel, 38);
-  assert.equal(document.activeElement, inputs.at(-1));
+  assert.equal(document.activeElement, tabs[0]);
   key(panel, 40);
   assert.equal(document.activeElement, inputs[0]);
   const before = inputs[0].checked;
@@ -133,10 +154,16 @@ test('TV Back and Green close settings and restore previous focus', async () => 
 });
 
 test('Green settings cycle picture mode and zoom with arrows, OK and reset', async () => {
-  const { env, document, panel, key } = await dialogRuntime();
+  const { env, document, panel, tabs, pages, control, key } =
+    await dialogRuntime();
   const config = await env.import('src/config.js');
   key(document, 404);
-  const [mode, zoom, reset] = panel.querySelectorAll('button');
+  tabs[1].click();
+  const mode = control('screenFit'),
+    zoom = control('videoZoom');
+  const reset = pages[1]
+    .querySelectorAll('button')
+    .find((button) => button.textContent === 'Reset framing and zoom');
   mode.focus();
   key(panel, 39);
   assert.equal(config.configRead('screenFit'), 'fill');
@@ -153,4 +180,63 @@ test('Green settings cycle picture mode and zoom with arrows, OK and reset', asy
   key(panel, 13);
   assert.equal(config.configRead('screenFit'), 'original');
   assert.equal(config.configRead('videoZoom'), 100);
+});
+
+test('category switching disables hidden controls and every category is reachable', async () => {
+  const { document, panel, tabs, pages, key } = await dialogRuntime();
+  key(document, 404);
+  key(panel, 38);
+  for (let index = 1; index < 4; index++) {
+    key(panel, 39);
+    assert.equal(document.activeElement, tabs[index]);
+    pages.forEach((page, pageIndex) => {
+      assert.equal(page.style.display, pageIndex === index ? 'block' : 'none');
+      assert.ok(
+        page
+          .querySelectorAll('input, button')
+          .every((control) => control.disabled === (pageIndex !== index))
+      );
+    });
+    key(panel, 40);
+    assert.equal(
+      document.activeElement,
+      pages[index].querySelectorAll('input, button')[0]
+    );
+    key(panel, 38);
+  }
+});
+
+test('reopening Green always starts with Ads and keyboard tab stays in the dialog', async () => {
+  const { document, panel, previous, tabs, control, key } =
+    await dialogRuntime();
+  key(document, 404);
+  tabs[3].click();
+  key(panel, 461);
+  assert.equal(document.activeElement, previous);
+  key(document, 404);
+  assert.equal(document.activeElement, control('enableAdBlock'));
+  key(panel, 9);
+  assert.equal(document.activeElement, control('enableSponsorBlock'));
+  key(panel, 37);
+  assert.equal(control('enableSponsorBlock').checked, false);
+  key(panel, 39);
+  assert.equal(control('enableSponsorBlock').checked, true);
+});
+
+test('document-level remote events are trapped inside the open glass panel', async () => {
+  const { document, previous, panel, control, key } = await dialogRuntime();
+  key(document, 404);
+  let trapped = 0;
+  key(document, 40, { stopImmediatePropagation: () => trapped++ });
+  assert.equal(document.activeElement, control('enableSponsorBlock'));
+  assert.equal(trapped, 1);
+  let outsideClicks = 0;
+  previous.addEventListener('click', () => outsideClicks++);
+  previous.focus();
+  key(document, 13);
+  assert.equal(outsideClicks, 0);
+  assert.equal(document.activeElement, control('enableAdBlock'));
+  key(document, 461, { stopImmediatePropagation: () => trapped++ });
+  assert.equal(panel.style.display, 'none');
+  assert.equal(trapped, 2);
 });

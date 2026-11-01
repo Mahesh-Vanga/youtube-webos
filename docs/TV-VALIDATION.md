@@ -1,11 +1,11 @@
-# Physical TV validation — 0.5.5
+# Physical TV validation — 0.5.6
 
 Target reported by the user: **LG OLED55C2XSC**. The installed webOS version was
 not supplied. No TV was connected during development. Unit tests, browser fixture
 checks and ES5 bundle compatibility do not certify actual TV playback or fps.
 
-1. Save the previous `youtube.leanback.v4_0.5.4_all.ipk`. Install the 0.5.5 IPK
-   using Homebrew or webOS Dev Manager and confirm **v0.5.5** at the bottom of the
+1. Save the previous `youtube.leanback.v4_0.5.5_all.ipk`. Install the 0.5.6 IPK
+   using Homebrew or webOS Dev Manager and confirm **v0.5.6** at the bottom of the
    green-button settings panel. Reopen the app after updating.
 2. Leave “Prefer highest supported quality” and “Frosted settings background”
    **off**. Check glass theme on/off while browsing. Confirm focus returns when
@@ -31,7 +31,7 @@ checks and ES5 bundle compatibility do not certify actual TV playback or fps.
 8. On known 5.1 content, look for YouTube's native 5.1 option and check the audio
    system's received format. A Dolby-capable television alone cannot make a
    stereo source Dolby Atmos. Do not interpret a fake badge as verification.
-9. On 4:3, widescreen and vertical videos, test Green → Picture framing → Fill
+9. On 4:3, widescreen and vertical videos, test Green → Picture → Picture framing → Fill
    and zoom. Confirm only video changes, controls remain reachable, and Original
    with 100% (or Reset) restores normal playback. Test recommendations, song
    changes and returning Home while a custom framing option is enabled. Presets
@@ -43,6 +43,17 @@ checks and ES5 bundle compatibility do not certify actual TV playback or fps.
     upload next and confirm it stays SDR. Disable the preference and check Auto
     is restored unless highest quality was separately enabled. This does not
     convert SDR to HDR, unlock unavailable quality levels or enhance 1080p to 8K.
+11. Confirm Green opens Ads & skips first with the video visible through the panel.
+    Switch all four categories with the remote and pointer. Hidden controls must
+    not receive focus; the header and footer should stay visible when scrolling.
+    Check that navigation does not also seek or move the video interface behind
+    the panel. Check all three transparency levels and optional blur; disable
+    blur if it affects performance on the installed firmware.
+12. Disable SponsorBlock during playback, then reenable it and change a skip
+    category. Confirm the current video responds immediately. Test the sleep
+    timer, cancellation, playback pause on expiry, and Off after app restart.
+    In Extras, refresh video details and compare source resolution with Stats for
+    nerds; source dimensions are not the panel's output resolution.
 
 For a regression, disable the glass theme, restart and repeat the same steps.
 Record model, webOS version, app version, video ID, network type, exact remote
@@ -53,7 +64,7 @@ the old forced-quality default; login data is not deliberately cleared.
 ## Homebrew publication check
 
 Run `pnpm catalog:check` against the exact new IPK. After publishing source,
-binary and feed together, verify the remote feed says 0.5.5 and the downloaded
+binary and feed together, verify the remote feed says 0.5.6 and the downloaded
 IPK's SHA-256 equals `manifest.ipkHash.sha256`. If jsDelivr still serves an old
-version, use `https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/apps-0.5.5.json`.
+version, use `https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/apps-0.5.6.json`.
 The older commit-pinned `@bc12eea/apps.json` remains on 0.5.4 intentionally.

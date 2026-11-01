@@ -1,8 +1,9 @@
 YouTube Extended for webOS — unofficial modified fork
 
 Modified by Mahesh Vanga, 1–2 November 2026.
-Version 0.5.5 adds video framing/zoom and a native HDR-format preference to
-the 0.5.4 glass styling, playback, navigation and content-ordering fixes.
+Version 0.5.6 adds the transparent Green-button settings panel, sleep timer,
+video details, panel transparency and live SponsorBlock toggle handling.
+It retains the earlier video framing/zoom, native HDR preference and playback fixes.
 
 Based on webosbrew/youtube-webos and its contributors.
 Upstream: https://github.com/webosbrew/youtube-webos
