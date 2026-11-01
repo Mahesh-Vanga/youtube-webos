@@ -15,9 +15,9 @@
         "rootRequired": false,
         "ipkUrl": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/youtube.leanback.v4_0.5.3_all.ipk",
         "ipkHash": {
-          "sha256": "bbf0f73ec92601a42c97724d281b0410cd284e52193386d9fe7b880169b6d441"
+          "sha256": "16ac93a37545378df60991af5a24ed344fb67f8189b1af1d400ce59b52ebf024"
         },
-        "ipkSize": 514596
+        "ipkSize": 515172
       },
       "shortDescription": "YouTube with Apple Liquid Glass theme, Dolby 5.1 Surround, and deep song search."
     }

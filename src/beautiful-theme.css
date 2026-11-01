@@ -50,8 +50,43 @@ ytlr-tile-renderer.zylon-focus,
   transition: none !important;
 }
 
-/* 4. Player Controls: DO NOT ALTER NATIVE SIZING OR POSITIONING */
-/* All native positions, heights, margins, and flex coordinates are preserved */
+/* 4. Unified Single Scrubber (Merge lower red slider onto transparent slide) */
+[idomkey='player-bar-renderer'] {
+  position: relative !important;
+}
+
+/* Place the slider directly on top of the transparent slide */
+[idomkey='player-bar-renderer'] [idomkey='slider'] {
+  position: absolute !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+/* Remove separate red track background below */
+[idomkey='player-bar-renderer'] [idomkey='slider'] [idomkey='slider-background'],
+[idomkey='player-bar-renderer'] [idomkey='slider'] [idomkey='slider-buffer'] {
+  background: transparent !important;
+}
+
+/* Match the red slider progress directly on the transparent slide */
+[idomkey='player-bar-renderer'] [idomkey='slider-progress'] {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.35) 0%, rgba(0, 122, 255, 0.75) 100%) !important;
+  border-radius: 9999px !important;
+}
+
+/* White glowing scrub thumb dot directly on the transparent bar */
+[idomkey='player-bar-renderer'] [idomkey='slider-thumb'],
+[idomkey='player-bar-renderer'] [idomkey='thumb'] {
+  background: #ffffff !important;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.95), 0 0 18px rgba(0, 122, 255, 0.7) !important;
+}
 
 /* 5. Dolby Audio Badge (Subtle Pill in Options) */
 .ytaf-dolby-badge {
