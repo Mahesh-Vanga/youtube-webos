@@ -1,6 +1,6 @@
 {
   "name": "youtube-webos",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Unofficial webOS YouTube fork with lightweight glass styling",
   "type": "module",
   "main": "index.js",

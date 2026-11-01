@@ -1,11 +1,43 @@
 # YouTube Extended for webOS — unofficial fork
 
-Modified by Mahesh Vanga, 1 November 2026. Based on
+Modified by Mahesh Vanga, 1–2 November 2026. Based on
 [webosbrew/youtube-webos](https://github.com/webosbrew/youtube-webos), with the
 original authors' source and GPL-3.0-only license retained. This fork is not
 endorsed by webosbrew, Google/YouTube, Apple, Dolby, or LG.
 
-## Version 0.5.4
+## Version 0.5.5
+
+Press **Green** to open settings for ad blocking, SponsorBlock and picture controls.
+
+- **Picture framing:** Original (no override), Fill TV screen (crop), 16:9, 4:3
+  and 21:9 frames. Frame presets fit the source without changing its proportions;
+  they do not force video stretching on webOS. Fill crops a source with a different
+  ratio to cover the TV screen.
+- **Video zoom:** 100, 110, 125, 150, 175, 200, 250 or 300 percent. Zoom crops
+  the edges. Use zoom for black bars encoded inside a video; they are not detected
+  automatically. **Reset framing and zoom** restores Original/100% immediately.
+- Use **Up/Down** to select a setting, **Left/Right** to change a picture control,
+  or **OK** to cycle it. Green or TV Back closes the panel.
+- **Prefer HDR when offered by the video and TV:** selects a playable format
+  explicitly labelled HDR by YouTube. With no HDR-labelled format it retains Auto
+  unless highest quality was separately enabled. Native automatic HDR negotiation
+  continues normally. Turning the preference off returns to Auto or the selected
+  highest-quality preference. HDR switching may rebuffer.
+
+Picture changes are off by default and affect only video on the Watch page, not
+controls or browsing surfaces. They use native video-plane sizing, not CSS
+`object-fit`, filters, Canvas processing or a second video decoder. LG documents
+that app-controlled stretching is not supported; physical-TV crop behavior still
+needs verification on the installed firmware.
+
+An SDR or 1080p source cannot become genuine HDR or 8K through these settings.
+The C2's hardware displays lower-resolution video on its **4K** panel. No fake HDR
+metadata, artificial 8K quality entries or codec capability overrides are added.
+
+Reference: [LG on aspect-ratio limitations in webOS apps](https://forum.webostv.developer.lge.com/t/video-playback-fullscreen-issue/9362/11),
+[YouTube HDR playback requirements](https://support.google.com/youtube/answer/7126552?hl=en).
+
+### Retained from 0.5.4
 
 - Lightweight glass-inspired cards, chips, notifications and settings. Theme can
   be disabled immediately with the green remote button; settings blur is optional
@@ -57,7 +89,7 @@ pnpm catalog
 pnpm catalog:check
 ```
 
-Install `youtube.leanback.v4_0.5.4_all.ipk` with webOS Dev Manager or the Homebrew
+Install `youtube.leanback.v4_0.5.5_all.ipk` with webOS Dev Manager or the Homebrew
 Channel. It uses the existing app ID so it updates the installed fork; retain the
 previous IPK if you need to roll back. Local code changes do not update the TV.
 
@@ -66,7 +98,9 @@ The existing feed address remains:
 Publish the matching source, **new IPK and generated apps.json together** to your
 GitHub `main` branch. Until then that URL continues serving the previously
 published version. jsDelivr may cache `@main`; verify the advertised version and
-SHA-256 before installing, and use a commit-pinned URL when testing a release.
+SHA-256 before installing. The additional version-specific `apps-0.5.5.json` feed
+can be used to avoid a previously cached feed URL. A commit-pinned feed such as
+`@bc12eea/apps.json` stays on its original version and will not update to 0.5.5.
 `pnpm catalog:check` rejects stale version/size/hash metadata.
 
 See [TV validation and rollback](docs/TV-VALIDATION.md) for physical-device checks.

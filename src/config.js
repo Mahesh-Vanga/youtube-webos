@@ -64,6 +64,26 @@ const configOptions = new Map([
     }
   ],
   [
+    'preferHDR',
+    { default: false, desc: 'Prefer HDR when offered by the video and TV' }
+  ],
+  [
+    'screenFit',
+    {
+      default: 'original',
+      desc: 'Picture framing',
+      values: ['original', 'fill', '16:9', '4:3', '21:9']
+    }
+  ],
+  [
+    'videoZoom',
+    {
+      default: 100,
+      desc: 'Video zoom',
+      values: [100, 110, 125, 150, 175, 200, 250, 300]
+    }
+  ],
+  [
     'removeEndscreen',
     {
       default: false,
@@ -132,8 +152,14 @@ function loadStoredConfig() {
     if (!stored || typeof stored !== 'object' || Array.isArray(stored))
       return null;
     const values = Object.create(null);
-    for (const key of configOptions.keys()) {
-      if (typeof stored[key] === 'boolean') values[key] = stored[key];
+    for (const [key, option] of configOptions) {
+      if (
+        option.values
+          ? option.values.includes(stored[key])
+          : typeof stored[key] === 'boolean'
+      ) {
+        values[key] = stored[key];
+      }
     }
     // Reset the old forced bitrate default once, then retain user choices.
     if (stored.settingsRevision !== 1) values.forceHighResVideo = false;
@@ -182,6 +208,13 @@ export function configRead(key) {
 export function configWrite(key, value) {
   if (!configExists(key)) {
     throw new Error('tried to write unknown config key: ' + key);
+  }
+
+  const option = configOptions.get(key);
+  if (
+    option.values ? !option.values.includes(value) : typeof value !== 'boolean'
+  ) {
+    throw new TypeError('invalid value for config key: ' + key);
   }
 
   const oldValue =

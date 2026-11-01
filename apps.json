@@ -6,20 +6,20 @@
       "iconUri": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/assets/largeIcon.png",
       "manifest": {
         "id": "youtube.leanback.v4",
-        "version": "0.5.4",
+        "version": "0.5.5",
         "type": "web",
         "title": "YouTube Extended",
-        "appDescription": "Unofficial YouTube fork with lightweight glass styling and music-first browsing. Playback formats depend on the TV and video.",
+        "appDescription": "Unofficial YouTube fork with glass styling, video framing/zoom, native HDR preference and music-first browsing. HDR and resolution depend on the video and TV.",
         "iconUri": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/assets/largeIcon.png",
         "sourceUrl": "https://github.com/Mahesh-Vanga/youtube-webos",
         "rootRequired": false,
-        "ipkUrl": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/youtube.leanback.v4_0.5.4_all.ipk",
+        "ipkUrl": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/youtube.leanback.v4_0.5.5_all.ipk",
         "ipkHash": {
-          "sha256": "e105d6b0a8a0f7fe136a44e9a7505306f1e5977fd36b0ab5bc64e9c2fba234ec"
+          "sha256": "b97aeca99d8c93ed03f52cd9e24cf4072a5c26ea9f39ae7558a85449972c44aa"
         },
-        "ipkSize": 471822
+        "ipkSize": 478216
       },
-      "shortDescription": "Glass-inspired YouTube with music-first browsing."
+      "shortDescription": "Glass YouTube with picture framing, zoom and native HDR preference."
     }
   ]
 }

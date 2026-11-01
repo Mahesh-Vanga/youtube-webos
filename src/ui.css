@@ -37,6 +37,31 @@
   font-size: 1.3rem;
 }
 
+.ytaf-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.5rem 0;
+  font-size: 1.3rem;
+}
+
+.ytaf-setting-row button,
+.ytaf-reset-picture {
+  font: inherit;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  min-height: 2.5rem;
+}
+
+.ytaf-picture-help {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #d5d7de;
+}
+
 .ytaf-notification-container {
   position: absolute;
   right: 10px;

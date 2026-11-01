@@ -30,7 +30,7 @@ async function dialogRuntime() {
       this.listeners.get(type).push(callback);
     }
     matches(selector) {
-      return this.tagName === selector;
+      return selector.split(',').some((value) => this.tagName === value.trim());
     }
     querySelectorAll(selector) {
       return this.children.flatMap((child) => [
@@ -45,8 +45,12 @@ async function dialogRuntime() {
       document.activeElement = this;
     }
     click() {
-      this.checked = !this.checked;
-      for (const listener of this.listeners.get('change') || [])
+      if (this.tagName === 'input') {
+        this.checked = !this.checked;
+        for (const listener of this.listeners.get('change') || [])
+          listener({ target: this });
+      }
+      for (const listener of this.listeners.get('click') || [])
         listener({ target: this });
     }
   }
@@ -68,7 +72,7 @@ async function dialogRuntime() {
     },
     globals: {
       document,
-      __YTAF_VERSION__: '0.5.4',
+      __YTAF_VERSION__: '0.5.5',
       MutationObserver: class {
         observe() {}
       },
@@ -126,4 +130,27 @@ test('TV Back and Green close settings and restore previous focus', async () => 
   key(document, 404);
   assert.equal(panel.style.display, 'none');
   assert.equal(document.activeElement, previous);
+});
+
+test('Green settings cycle picture mode and zoom with arrows, OK and reset', async () => {
+  const { env, document, panel, key } = await dialogRuntime();
+  const config = await env.import('src/config.js');
+  key(document, 404);
+  const [mode, zoom, reset] = panel.querySelectorAll('button');
+  mode.focus();
+  key(panel, 39);
+  assert.equal(config.configRead('screenFit'), 'fill');
+  assert.equal(document.activeElement, mode);
+  key(panel, 13);
+  assert.equal(config.configRead('screenFit'), '16:9');
+  key(panel, 37);
+  assert.equal(config.configRead('screenFit'), 'fill');
+  key(panel, 40);
+  assert.equal(document.activeElement, zoom);
+  key(panel, 39);
+  assert.equal(config.configRead('videoZoom'), 110);
+  reset.focus();
+  key(panel, 13);
+  assert.equal(config.configRead('screenFit'), 'original');
+  assert.equal(config.configRead('videoZoom'), 100);
 });

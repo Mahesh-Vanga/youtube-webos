@@ -280,3 +280,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   thumbnail preference changes, and stale SponsorBlock initialization.
 - Generate and verify Homebrew metadata from the actual package; add regression
   tests, fork attribution and a physical-TV validation guide.
+
+# 0.5.5 — unofficial fork, 2026-11-02
+
+- Green-menu picture controls: Original, crop-to-fill and 16:9/4:3/21:9 frames,
+  100–300% zoom and reset, with remote Left/Right/OK support and saved preferences.
+- Native video-plane geometry changes apply only on Watch; no filters, video
+  re-encoding, layout changes to controls or fabricated upscaling capabilities.
+- Optional preference for playable formats explicitly labelled HDR. SDR-only
+  sources remain SDR; automatic playback is restored between videos as needed.
+- Version-specific Homebrew feed to avoid previously cached repository addresses.

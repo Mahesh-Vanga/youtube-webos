@@ -70,25 +70,26 @@ test('unavailable localStorage does not prevent startup or changing preferences'
   assert.equal(config.configRead('enableModernTheme'), false);
 });
 
-async function qualityRuntime() {
-  let enabled = false;
+async function qualityRuntime(formats) {
+  const settings = { forceHighResVideo: false, preferHDR: false };
   const listeners = new Map(),
     calls = [],
     change = {};
   const manager = {
     playerMode: 2,
     player: {
-      getAvailableQualityData: () => [
-        { quality: 'highres', qualityLabel: '4320p', isPlayable: false },
-        { quality: 'hd2160', qualityLabel: '2160p', isPlayable: true },
-        {
-          quality: 'premium',
-          qualityLabel: '4320p',
-          isPlayable: true,
-          paygatedQualityDetails: {}
-        },
-        { quality: 'hd1080', qualityLabel: '1080p', isPlayable: true }
-      ],
+      getAvailableQualityData: () =>
+        formats || [
+          { quality: 'highres', qualityLabel: '4320p', isPlayable: false },
+          { quality: 'hd2160', qualityLabel: '2160p', isPlayable: true },
+          {
+            quality: 'premium',
+            qualityLabel: '4320p',
+            isPlayable: true,
+            paygatedQualityDetails: {}
+          },
+          { quality: 'hd1080', qualityLabel: '1080p', isPlayable: true }
+        ],
       setPlaybackQualityRange: (...args) => calls.push(args)
     },
     addEventListener: (name, fn) => listeners.set(name, fn),
@@ -99,7 +100,7 @@ async function qualityRuntime() {
   const env = runtime({
     stubs: {
       'src/config.ts': {
-        configRead: () => enabled,
+        configRead: (key) => settings[key],
         configAddChangeListener: (name, fn) => {
           change[name] = fn;
         }
@@ -117,8 +118,12 @@ async function qualityRuntime() {
     listeners,
     emit: (name) => listeners.get(name)?.call(manager),
     toggle: (value) => {
-      enabled = value;
+      settings.forceHighResVideo = value;
       change.forceHighResVideo();
+    },
+    toggleHDR: (value) => {
+      settings.preferHDR = value;
+      change.preferHDR();
     }
   };
 }
@@ -133,11 +138,14 @@ test('adaptive quality default never forces a format when a new song starts', as
 test('quality preference selects playable non-premium 4K and restores auto', async () => {
   const env = await qualityRuntime();
   env.toggle(true);
-  assert.deepEqual(env.calls, [['hd2160', 'hd2160', undefined]]);
+  assert.deepEqual(env.calls, [
+    ['default', 'default'],
+    ['hd2160', 'hd2160', undefined]
+  ]);
   env.emit('newVideo');
   env.emit('playbackStart');
   env.emit('playbackStart');
-  assert.equal(env.calls.length, 2);
+  assert.equal(env.calls.length, 3);
   env.toggle(false);
   assert.deepEqual(env.calls.at(-1), ['default', 'default']);
   assert.equal(env.listeners.has('playbackStart'), false);
@@ -148,4 +156,54 @@ test('preview playback does not force quality', async () => {
   env.manager.playerMode = 0;
   env.toggle(true);
   assert.deepEqual(env.calls, []);
+});
+
+test('HDR preference selects only a playable explicitly advertised HDR format', async () => {
+  const env = await qualityRuntime([
+    { quality: 'hd2160', qualityLabel: '2160p', isPlayable: true },
+    {
+      quality: 'hd1080',
+      qualityLabel: '1080p HDR',
+      formatId: 'hdr1080',
+      isPlayable: true
+    },
+    { quality: 'highres', qualityLabel: '4320p HDR', isPlayable: false }
+  ]);
+  env.toggleHDR(true);
+  assert.deepEqual(env.calls.at(-1), ['hd1080', 'hd1080', 'hdr1080']);
+  env.toggleHDR(false);
+  assert.deepEqual(env.calls.at(-1), ['default', 'default']);
+});
+
+test('HDR preference preserves Auto on SDR-only sources and resets between songs', async () => {
+  const env = await qualityRuntime();
+  env.toggleHDR(true);
+  env.emit('newVideo');
+  env.emit('playbackStart');
+  assert.ok(env.calls.every((call) => call[0] === 'default'));
+});
+
+test('picture settings persist supported values and reject invalid settings', async () => {
+  const env = runtime();
+  const config = await env.import('src/config.js');
+  config.configWrite('screenFit', '4:3');
+  config.configWrite('videoZoom', 150);
+  config.configWrite('preferHDR', true);
+  const restored = await runtime({ stored: env.saved() }).import(
+    'src/config.js'
+  );
+  assert.equal(restored.configRead('screenFit'), '4:3');
+  assert.equal(restored.configRead('videoZoom'), 150);
+  assert.equal(restored.configRead('preferHDR'), true);
+  assert.throws(() => config.configWrite('screenFit', '8K'));
+  assert.throws(() => config.configWrite('videoZoom', 99999));
+  assert.throws(() => config.configWrite('preferHDR', 'true'));
+});
+
+test('invalid saved picture options fall back to original geometry', async () => {
+  const config = await runtime({
+    stored: '{"screenFit":"nonsense","videoZoom":99999}'
+  }).import('src/config.js');
+  assert.equal(config.configRead('screenFit'), 'original');
+  assert.equal(config.configRead('videoZoom'), 100);
 });

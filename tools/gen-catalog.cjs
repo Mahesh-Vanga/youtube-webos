@@ -10,7 +10,7 @@ const binary = fs.readFileSync(path.join(root, filename));
 const repository = pkg.repository.replace(/^github:/, '');
 const cdn = `https://cdn.jsdelivr.net/gh/${repository}@main`;
 const description =
-  'Unofficial YouTube fork with lightweight glass styling and music-first browsing. Playback formats depend on the TV and video.';
+  'Unofficial YouTube fork with glass styling, video framing/zoom, native HDR preference and music-first browsing. HDR and resolution depend on the video and TV.';
 const catalog = {
   packages: [
     {
@@ -32,11 +32,13 @@ const catalog = {
         },
         ipkSize: binary.length
       },
-      shortDescription: 'Glass-inspired YouTube with music-first browsing.'
+      shortDescription:
+        'Glass YouTube with picture framing, zoom and native HDR preference.'
     }
   ]
 };
 const target = path.join(root, 'apps.json');
+const versionTarget = path.join(root, `apps-${pkg.version}.json`);
 const output = JSON.stringify(catalog, null, 2) + '\n';
 if (process.argv.includes('--check')) {
   if (fs.readFileSync(target, 'utf8') !== output) {
@@ -44,8 +46,14 @@ if (process.argv.includes('--check')) {
       'apps.json does not match the current package. Run pnpm catalog after packaging.'
     );
   }
+  if (fs.readFileSync(versionTarget, 'utf8') !== output) {
+    throw new Error(
+      'Version-specific Homebrew feed does not match apps.json. Run pnpm catalog.'
+    );
+  }
   console.info('Homebrew version, URL, size and SHA-256 match the IPK.');
 } else {
   fs.writeFileSync(target, output);
+  fs.writeFileSync(versionTarget, output);
   console.info(`Updated apps.json for ${filename}`);
 }

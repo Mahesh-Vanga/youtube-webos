@@ -48,6 +48,37 @@ function createConfigCheckbox(key) {
   return elmLabel;
 }
 
+function createConfigCycle(key, choices) {
+  const row = document.createElement('div');
+  row.className = 'ytaf-setting-row';
+  const label = document.createElement('span');
+  label.textContent = configGetDesc(key);
+  const button = document.createElement('button');
+  button.type = 'button';
+  const update = () => {
+    button.textContent = choices.find(
+      ([value]) => value === configRead(key)
+    )[1];
+    button.setAttribute(
+      'aria-label',
+      `${configGetDesc(key)}: ${button.textContent}`
+    );
+  };
+  button.ytafAdjust = (direction) => {
+    const index = choices.findIndex(([value]) => value === configRead(key));
+    configWrite(
+      key,
+      choices[(index + direction + choices.length) % choices.length][0]
+    );
+  };
+  button.addEventListener('click', () => button.ytafAdjust(1));
+  configAddChangeListener(key, update);
+  update();
+  row.appendChild(label);
+  row.appendChild(button);
+  return row;
+}
+
 function createOptionsPanel() {
   const elmContainer = document.createElement('div');
 
@@ -66,9 +97,22 @@ function createOptionsPanel() {
         return;
       }
 
-      // Fast, lightweight arrow navigation inside the options dialog
+      const active = document.activeElement;
+      if (
+        (code === 37 || code === 39) &&
+        typeof active.ytafAdjust === 'function'
+      ) {
+        active.ytafAdjust(code === 37 ? -1 : 1);
+        evt.preventDefault();
+        evt.stopPropagation();
+        return;
+      }
+
+      // Up/Down navigates rows; Left/Right adjusts a picture control in place.
       if ([37, 38, 39, 40, 9].includes(code)) {
-        const inputs = Array.from(elmContainer.querySelectorAll('input'));
+        const inputs = Array.from(
+          elmContainer.querySelectorAll('input, button')
+        );
         const activeIdx = inputs.indexOf(document.activeElement);
         if (code === 38 || code === 37 || (code === 9 && evt.shiftKey)) {
           // Up / Left
@@ -78,14 +122,16 @@ function createOptionsPanel() {
           inputs[(activeIdx + 1) % inputs.length]?.focus();
         }
       } else if (code === 13) {
-        if (!evt.repeat && document.activeElement.matches('input')) {
+        if (!evt.repeat && document.activeElement.matches('input, button')) {
           document.activeElement.click();
         }
       } else if (code === 27 || code === 461) {
         showOptionsPanel(false);
-      } else if (code === 32) {
+      } else if (code === 32 && document.activeElement.matches('input')) {
         evt.stopPropagation();
         return;
+      } else if (code === 32 && document.activeElement.matches('button')) {
+        if (!evt.repeat) document.activeElement.click();
       }
 
       evt.preventDefault();
@@ -110,6 +156,39 @@ function createOptionsPanel() {
   elmContainer.appendChild(createConfigCheckbox('showWatch'));
   elmContainer.appendChild(createConfigCheckbox('removeShorts'));
   elmContainer.appendChild(createConfigCheckbox('forceHighResVideo'));
+  elmContainer.appendChild(createConfigCheckbox('preferHDR'));
+  elmContainer.appendChild(
+    createConfigCycle('screenFit', [
+      ['original', 'Original — no override'],
+      ['fill', 'Fill TV screen — crop'],
+      ['16:9', '16:9 frame — fit'],
+      ['4:3', '4:3 frame — fit'],
+      ['21:9', '21:9 frame — fit']
+    ])
+  );
+  elmContainer.appendChild(
+    createConfigCycle(
+      'videoZoom',
+      [100, 110, 125, 150, 175, 200, 250, 300].map((value) => [
+        value,
+        `${value}%`
+      ])
+    )
+  );
+  const resetPicture = document.createElement('button');
+  resetPicture.type = 'button';
+  resetPicture.className = 'ytaf-reset-picture';
+  resetPicture.textContent = 'Reset framing and zoom';
+  resetPicture.addEventListener('click', () => {
+    configWrite('screenFit', 'original');
+    configWrite('videoZoom', 100);
+  });
+  elmContainer.appendChild(resetPicture);
+  const pictureHelp = document.createElement('p');
+  pictureHelp.className = 'ytaf-picture-help';
+  pictureHelp.textContent =
+    'Up/Down: move · Left/Right or OK: change. Fill/zoom crops the video. Frame presets keep source proportions; webOS cannot force stretching. HDR requires an HDR source and TV support. 1080p stays 1080p; your TV scales it to its 4K panel. No artificial 8K or SDR-to-HDR conversion.';
+  elmContainer.appendChild(pictureHelp);
   elmContainer.appendChild(createConfigCheckbox('removeEndscreen'));
   elmContainer.appendChild(createConfigCheckbox('autoAccountSelect'));
   elmContainer.appendChild(createConfigCheckbox('enableFeedPrioritization'));

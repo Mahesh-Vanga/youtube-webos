@@ -1,11 +1,11 @@
-# Physical TV validation — 0.5.4
+# Physical TV validation — 0.5.5
 
 Target reported by the user: **LG OLED55C2XSC**. The installed webOS version was
 not supplied. No TV was connected during development. Unit tests, browser fixture
 checks and ES5 bundle compatibility do not certify actual TV playback or fps.
 
-1. Save the previous `youtube.leanback.v4_0.5.3_all.ipk`. Install the 0.5.4 IPK
-   using Homebrew or webOS Dev Manager and confirm **v0.5.4** at the bottom of the
+1. Save the previous `youtube.leanback.v4_0.5.4_all.ipk`. Install the 0.5.5 IPK
+   using Homebrew or webOS Dev Manager and confirm **v0.5.5** at the bottom of the
    green-button settings panel. Reopen the app after updating.
 2. Leave “Prefer highest supported quality” and “Frosted settings background”
    **off**. Check glass theme on/off while browsing. Confirm focus returns when
@@ -31,6 +31,18 @@ checks and ES5 bundle compatibility do not certify actual TV playback or fps.
 8. On known 5.1 content, look for YouTube's native 5.1 option and check the audio
    system's received format. A Dolby-capable television alone cannot make a
    stereo source Dolby Atmos. Do not interpret a fake badge as verification.
+9. On 4:3, widescreen and vertical videos, test Green → Picture framing → Fill
+   and zoom. Confirm only video changes, controls remain reachable, and Original
+   with 100% (or Reset) restores normal playback. Test recommendations, song
+   changes and returning Home while a custom framing option is enabled. Presets
+   keep the source's proportions; they are not a stretch override. Videos with
+   black bars encoded into the picture may require manual zoom. Check crop behavior
+   on the physical TV; source geometry unit tests do not prove native plane clipping.
+10. On a known HDR upload, enable Prefer HDR and confirm the quality menu offers
+    an HDR-labelled format and the TV actually enters HDR mode. Play an SDR-only
+    upload next and confirm it stays SDR. Disable the preference and check Auto
+    is restored unless highest quality was separately enabled. This does not
+    convert SDR to HDR, unlock unavailable quality levels or enhance 1080p to 8K.
 
 For a regression, disable the glass theme, restart and repeat the same steps.
 Record model, webOS version, app version, video ID, network type, exact remote
@@ -41,6 +53,7 @@ the old forced-quality default; login data is not deliberately cleared.
 ## Homebrew publication check
 
 Run `pnpm catalog:check` against the exact new IPK. After publishing source,
-binary and feed together, verify the remote feed says 0.5.4 and the downloaded
-IPK's SHA-256 equals `manifest.ipkHash.sha256`. If jsDelivr still serves 0.5.3,
-wait for its cache to refresh or use the release's commit-pinned feed URL.
+binary and feed together, verify the remote feed says 0.5.5 and the downloaded
+IPK's SHA-256 equals `manifest.ipkHash.sha256`. If jsDelivr still serves an old
+version, use `https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/apps-0.5.5.json`.
+The older commit-pinned `@bc12eea/apps.json` remains on 0.5.4 intentionally.
