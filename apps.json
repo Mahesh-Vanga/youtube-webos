@@ -6,20 +6,41 @@
       "iconUri": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/assets/largeIcon.png",
       "manifest": {
         "id": "youtube.leanback.v4",
-        "version": "0.5.7",
+        "version": "0.5.8",
         "type": "web",
         "title": "YouTube Extended",
         "appDescription": "Unofficial YouTube fork with a transparent Green-button settings panel, ad controls, picture framing/zoom, native HDR preference and sleep timer. HDR and resolution depend on the video and TV.",
         "iconUri": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/assets/largeIcon.png",
         "sourceUrl": "https://github.com/Mahesh-Vanga/youtube-webos",
         "rootRequired": false,
-        "ipkUrl": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/youtube.leanback.v4_0.5.7_all.ipk",
+        "ipkUrl": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/youtube.leanback.v4_0.5.8_all.ipk",
         "ipkHash": {
-          "sha256": "fdcd86bb250174c2496fac05eb38c9a9c05787a56806b297ea2e9fd103aa6897"
+          "sha256": "9e927429e239d01f879014fa3650f0e97bc31a8c3e4a1d94b8cce84e23fc5b9e"
         },
-        "ipkSize": 486716
+        "ipkSize": 491056
       },
-      "shortDescription": "Transparent Green-button settings with ad controls, zoom and sleep timer."
+      "shortDescription": "Glass settings with audio/TV shortcuts, ad controls and picture zoom."
+    },
+    {
+      "id": "com.mahesh.youtube.extended.launcher",
+      "title": "YouTube Extended Home",
+      "iconUri": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/assets/largeIcon.png",
+      "manifest": {
+        "id": "com.mahesh.youtube.extended.launcher",
+        "version": "0.5.8",
+        "type": "web",
+        "title": "YouTube Extended Home",
+        "appDescription": "Adds a separate LG Home icon that opens your existing YouTube Extended player. Install the player first. No video engine or settings are replaced.",
+        "iconUri": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/assets/largeIcon.png",
+        "sourceUrl": "https://github.com/Mahesh-Vanga/youtube-webos",
+        "rootRequired": false,
+        "ipkUrl": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/com.mahesh.youtube.extended.launcher_0.5.8_all.ipk",
+        "ipkHash": {
+          "sha256": "0e877e4f337957eabf3231384a870fd1266c2f5f5d08d1519b9f498621bfd3ed"
+        },
+        "ipkSize": 97664
+      },
+      "shortDescription": "LG Home icon for the installed YouTube Extended player."
     }
   ]
 }

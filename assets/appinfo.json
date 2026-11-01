@@ -4,6 +4,7 @@
   "type": "web",
   "main": "index.html",
   "title": "YouTube Extended",
+  "visible": true,
   "icon": "icon.png",
   "largeIcon": "largeIcon.png",
   "mediumLargeIcon": "mediumLargeIcon.png",

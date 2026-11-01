@@ -4,10 +4,13 @@
 !youtube.leanback.v4_0.5.5_all.ipk
 !youtube.leanback.v4_0.5.6_all.ipk
 !youtube.leanback.v4_0.5.7_all.ipk
+!youtube.leanback.v4_0.5.8_all.ipk
+!com.mahesh.youtube.extended.launcher_0.5.8_all.ipk
 /*.source.zip
 /*.manifest.json
 /node_modules/
 /.pnpm-store/
 /dist/
+/dist-launcher/
 .DS_Store
 /.vscode/

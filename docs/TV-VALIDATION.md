@@ -1,11 +1,11 @@
-# Physical TV validation — 0.5.6
+# Physical TV validation — 0.5.8
 
 Target reported by the user: **LG OLED55C2XSC**. The installed webOS version was
 not supplied. No TV was connected during development. Unit tests, browser fixture
 checks and ES5 bundle compatibility do not certify actual TV playback or fps.
 
-1. Save the previous `youtube.leanback.v4_0.5.5_all.ipk`. Install the 0.5.6 IPK
-   using Homebrew or webOS Dev Manager and confirm **v0.5.6** at the bottom of the
+1. Save the previous working player IPK. Install the 0.5.8 player IPK
+   using Homebrew or webOS Dev Manager and confirm **v0.5.8** at the bottom of the
    green-button settings panel. Reopen the app after updating.
 2. Leave “Prefer highest supported quality” and “Frosted settings background”
    **off**. Check glass theme on/off while browsing. Confirm focus returns when
@@ -54,6 +54,20 @@ checks and ES5 bundle compatibility do not certify actual TV playback or fps.
     timer, cancellation, playback pause on expiry, and Off after app restart.
     In Extras, refresh video details and compare source resolution with Stats for
     nerds; source dimensions are not the panel's output resolution.
+13. Install **YouTube Extended Home** from the same repository. Confirm it appears
+    in LG Home's apps list, move it with Edit App List if needed, and open it.
+    It must open the existing player with Green/Red controls and saved settings.
+    Removing this companion must not remove the player. If the player is missing,
+    the companion must show a clear installation message and retry button.
+14. Green/Red → Audio & TV → LG Sound settings: test TV Speaker, then HDMI (ARC)
+    Device with the connected soundbar/receiver. Check actual received formats on
+    the audio device. If the Sound-page launch is blocked, use the displayed TV
+    Settings-button path. A successful app-launch reply does not verify an output
+    switch or Dolby decoding.
+15. On supported 5.1 content, show the native player controls and try Go to YouTube
+    5.1 surround control. Check focus reaches the actual native option. On stereo
+    or hidden/unsupported controls, the overlay must show instructions without
+    claiming 5.1 or Atmos is enabled.
 
 For a regression, disable the glass theme, restart and repeat the same steps.
 Record model, webOS version, app version, video ID, network type, exact remote
@@ -64,7 +78,7 @@ the old forced-quality default; login data is not deliberately cleared.
 ## Homebrew publication check
 
 Run `pnpm catalog:check` against the exact new IPK. After publishing source,
-binary and feed together, verify the remote feed says 0.5.6 and the downloaded
-IPK's SHA-256 equals `manifest.ipkHash.sha256`. If jsDelivr still serves an old
-version, use `https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/apps-0.5.6.json`.
+both binaries and feed together, verify both entries say 0.5.8 and each downloaded
+IPK's SHA-256 equals its `manifest.ipkHash.sha256`. If jsDelivr serves an old
+version, use `https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/apps-0.5.8.json`.
 The older commit-pinned `@bc12eea/apps.json` remains on 0.5.4 intentionally.

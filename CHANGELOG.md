@@ -311,3 +311,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Deduplicate down/press/up sequences and held repeats; queue early presses until
   settings are ready. Update only the remote shortcut hints and release metadata.
 - No changes to playback, video quality, styling, panel layout or other settings.
+
+# 0.5.8 — unofficial fork, 2026-11-02
+
+- Add separately installable YouTube Extended Home with a unique visible app ID
+  and packaged icons. It launches the existing player through Application Manager.
+- Add Audio & TV to the working Green/Red overlay: open LG Sound settings for TV
+  speakers/HDMI ARC/eARC, focus a visible native YouTube 5.1 control, and show
+  source/output-dependent Dolby setup guidance with manual fallbacks.
+- Preserve the player ID and settings. No private launcher/audio database writes,
+  fake Atmos/5.1 support or transcoding is introduced.
+- Build/package both IPKs and publish both verified entries in the Homebrew feed.

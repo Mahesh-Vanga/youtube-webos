@@ -1,6 +1,7 @@
 {
   "checkBrowser": true,
   "files": [
-    "./dist/**/*.js"
+    "./dist/**/*.js",
+    "./dist-launcher/**/*.js"
   ]
 }

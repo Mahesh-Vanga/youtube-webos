@@ -87,7 +87,8 @@
   cursor: pointer;
 }
 .ytaf-ui-container .ytaf-settings-tab {
-  min-width: 8rem;
+  min-width: 0;
+  flex: 1;
   margin: 0 0.3rem;
   border-radius: 2rem;
   background: rgba(255, 255, 255, 0.035);

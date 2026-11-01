@@ -1,0 +1,16 @@
+{
+  "id": "com.mahesh.youtube.extended.launcher",
+  "version": "0.5.8",
+  "vendor": "Mahesh Vanga",
+  "type": "web",
+  "main": "index.html",
+  "title": "YouTube Extended Home",
+  "appDescription": "Home shortcut for the installed YouTube Extended player",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png",
+  "iconColor": "#ff0000",
+  "resolution": "1920x1080",
+  "visible": true,
+  "noWindow": false,
+  "disableBackHistoryAPI": true
+}

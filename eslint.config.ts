@@ -73,7 +73,10 @@ const configs = [
     }
   },
 
-  { files: ['src/**/*'], languageOptions: { globals: { ...globals.browser } } },
+  {
+    files: ['src/**/*', 'launcher/**/*.js'],
+    languageOptions: { globals: { ...globals.browser } }
+  },
 
   {
     // Why doesn't ESLint do this by default is beyond me.
@@ -89,7 +92,7 @@ const configs = [
 
   {
     // `ignores` field must be in the very bottom config.
-    ignores: ['dist/**/*', '**/*-polyfill.*']
+    ignores: ['dist/**/*', 'dist-launcher/**/*', '**/*-polyfill.*']
   }
 ] as const satisfies Linter.Config[];
 

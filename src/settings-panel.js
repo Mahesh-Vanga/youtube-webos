@@ -6,6 +6,8 @@ import {
   configGetDesc
 } from './config.js';
 import './settings-panel.css';
+import { openTVSoundSettings, launchTVApp } from './tv-service.js';
+import { findSurroundControl } from './native-surround.js';
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -126,7 +128,13 @@ export function createSettingsPanel(onClose) {
     }
     details.textContent = `Source video: ${video.videoWidth} × ${video.videoHeight} · ${video.paused ? 'Paused' : 'Playing'}${dropped}. Your TV scales the source to its panel.`;
   }
-  const names = ['Ads & skips', 'Picture', 'Appearance', 'Extras'];
+  const names = [
+    'Ads & skips',
+    'Picture',
+    'Appearance',
+    'Extras',
+    'Audio & TV'
+  ];
   function controls(page) {
     return Array.from(page.querySelectorAll('input, button'));
   }
@@ -251,6 +259,69 @@ export function createSettingsPanel(onClose) {
         value ? `${value} minutes` : 'Off'
       ])
     )
+  );
+
+  const audioStatus = element(
+    'p',
+    'ytaf-settings-note',
+    'Choose LG Sound settings to switch between TV speakers and HDMI ARC/eARC.'
+  );
+  audioStatus.setAttribute('role', 'status');
+  pages[4].appendChild(
+    action('TV speakers / HDMI ARC · LG Sound settings', () => {
+      audioStatus.textContent = 'Opening LG Sound settings…';
+      openTVSoundSettings()
+        .then(() => onClose())
+        .catch(() => {
+          audioStatus.textContent =
+            'Use the TV Settings button → All Settings → Sound → Sound Out → Use Wired Speaker → HDMI (ARC) Device. The TV did not allow this app to open Sound settings.';
+        });
+    })
+  );
+  pages[4].appendChild(
+    action('Go to YouTube 5.1 surround control', () => {
+      const control = findSurroundControl();
+      if (control) {
+        onClose();
+        control.focus();
+      } else
+        audioStatus.textContent =
+          'YouTube has not exposed a visible 5.1 control. Open the player controls on a supported video and select 5.1 when available. Stereo content remains stereo.';
+    })
+  );
+  pages[4].appendChild(audioStatus);
+  pages[4].appendChild(element('h2', '', 'Dolby Atmos / Dolby Digital 5.1'));
+  pages[4].appendChild(
+    element(
+      'p',
+      'ytaf-settings-note',
+      '5.1 requires a surround track, compatible playback and speakers. Atmos requires an Atmos source plus a compatible TV/audio system. This app cannot convert stereo into genuine Dolby Atmos or report the HDMI output format. Check the soundbar/receiver for the received format.'
+    )
+  );
+  pages[4].appendChild(
+    element(
+      'p',
+      'ytaf-settings-note',
+      'For TV speakers, select Use TV Speaker in LG Sound Out. For HDMI audio, choose Use Wired Speaker → HDMI (ARC) Device. Check eARC Support and Digital Sound Output (Auto or Pass Through) where supported. These settings are applied by the TV.'
+    )
+  );
+  pages[4].appendChild(element('h2', '', 'LG Home shortcut'));
+  pages[4].appendChild(
+    element(
+      'p',
+      'ytaf-settings-note',
+      'Install “YouTube Extended Home” from this repository in Homebrew Channel. Its separate Home icon launches your existing YouTube Extended player without replacing it.'
+    )
+  );
+  pages[4].appendChild(
+    action('Open Homebrew for the Home shortcut', () => {
+      launchTVApp('org.webosbrew.hbchannel')
+        .then(() => onClose())
+        .catch(() => {
+          audioStatus.textContent =
+            'Open Homebrew Channel manually and install YouTube Extended Home from this repository.';
+        });
+    })
   );
   pages[3].appendChild(
     element(

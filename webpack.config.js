@@ -3,7 +3,7 @@ import { TransformAsyncModulesPlugin } from 'transform-async-modules-webpack-plu
 import TerserPlugin from 'terser-webpack-plugin';
 import pkgJson from './package.json' with { type: 'json' };
 import webpack from 'webpack';
-import { basename } from 'node:path';
+import { basename, resolve } from 'node:path';
 
 /**
  * @param input {Buffer<ArrayBufferLike>}
@@ -16,8 +16,8 @@ function transformAppInfo(input) {
 }
 
 /** @type {(env: Record<string, string>, argv: { mode?: string }) => (import('webpack').Configuration)[]} */
-const makeConfig = (_env, argv) => [
-  {
+const makeConfig = (_env, argv) => {
+  const main = {
     /**
      * NOTE: Builds with devtool = 'eval' contain very big eval chunks which seem
      * to cause segfaults (at least) on nodeJS v0.12.2 used on webOS 3.x.
@@ -115,7 +115,38 @@ const makeConfig = (_env, argv) => [
         __YTAF_VERSION__: JSON.stringify(pkgJson.version)
       })
     ]
-  }
-];
+  };
+  return [
+    main,
+    {
+      ...main,
+      entry: { index: './launcher/index.js' },
+      output: {
+        path: resolve('dist-launcher'),
+        filename: '[name].js',
+        clean: true
+      },
+      optimization: {
+        minimizer: [new TerserPlugin({ terserOptions: { ecma: 5 } })]
+      },
+      plugins: [
+        new CopyPlugin({
+          patterns: [
+            {
+              from: 'launcher/appinfo.json',
+              to: 'appinfo.json',
+              transform: transformAppInfo
+            },
+            { from: 'launcher/index.html', to: 'index.html' },
+            { from: 'assets/icon.png', to: 'icon.png' },
+            { from: 'assets/largeIcon.png', to: 'largeIcon.png' },
+            { from: 'LICENSE' },
+            { from: 'NOTICE' }
+          ]
+        })
+      ]
+    }
+  ];
+};
 
 export default makeConfig;

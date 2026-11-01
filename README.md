@@ -5,14 +5,61 @@ Modified by Mahesh Vanga, 1–2 November 2026. Based on
 original authors' source and GPL-3.0-only license retained. This fork is not
 endorsed by webosbrew, Google/YouTube, Apple, Dolby, or LG.
 
-## Version 0.5.7
+## Version 0.5.8
+
+### LG Home icon
+
+Install **two entries** from the `apps-0.5.8.json` Homebrew repository:
+
+1. Update **YouTube Extended** (the existing player).
+2. Install **YouTube Extended Home** (the new Home shortcut).
+
+The shortcut uses its own normal app ID,
+`com.mahesh.youtube.extended.launcher`, explicit visible metadata, and packaged
+icons. It launches the existing `youtube.leanback.v4` player through LG's public
+Application Manager API. Your player ID, login, shortcuts and settings are not
+replaced. Open LG Home and find **YouTube Extended Home** in the apps row/list;
+use LG's Edit App List to move it to your preferred position. LG firmware still
+controls launcher registration/order, so a TV check is required after installing.
+
+This separate shortcut avoids relying on an old or hidden launcher entry for the
+shared official YouTube app ID. It is a companion Home tile, not a replacement
+launcher or a new video engine. If the player is missing, the shortcut shows a
+retry button and instructions instead of silently opening another service.
+
+### Audio & TV in the Green/Red overlay
+
+- **TV speakers / HDMI ARC · LG Sound settings** opens LG's native Sound menu.
+  Select **Sound Out → Use TV Speaker** for the TV speakers, or **Use Wired
+  Speaker → HDMI (ARC) Device** for the connected soundbar/receiver. Configure
+  eARC Support and Digital Sound Output (Auto/Pass Through) there when supported.
+  Firmware decides whether direct launching of the Sound page is allowed; if
+  rejected or unavailable, the overlay shows the manual Settings-button path.
+- **Go to YouTube 5.1 surround control** focuses a single, explicitly labelled,
+  visible native surround control in the player when it exists. Press OK there
+  to use YouTube's own option. If none is exposed, manual instructions appear.
+  No surround capability or active-output state is fabricated.
+- **Dolby Atmos / Dolby Digital 5.1** setup guidance explains source and hardware
+  requirements. Stereo is not converted into genuine Atmos or 5.1. The app cannot
+  confirm what the HDMI receiver actually receives; check the receiver/soundbar.
+- **Open Homebrew for the Home shortcut** opens Homebrew without modifying TV
+  launcher databases, protected settings or your existing app registration.
+
+No private TV sound-output APIs, transcoding, decoder spoofing or fake Atmos
+toggles are used. Native LG Sound settings apply the output change.
+
+References: [LG Application Manager API](https://webostv.developer.lge.com/develop/references/application-manager),
+[LG home-theater output instructions](https://www.lg.com/in/support/product-support/troubleshoot/help-library/cs-CT52006584-20153323751785/),
+[YouTube native 5.1 requirements](https://support.google.com/youtube/answer/11904456?hl=en).
+
+### Retained shortcut fix from 0.5.7
 
 Shortcut-only maintenance update: **tap Green or Red** to open/close the same
 settings panel. Color keys are captured early on `window`, including numeric,
 named, and release-only events. Holding a button does not repeatedly toggle the
 panel. A press before the panel is ready is queued. Playback, appearance and
 all existing settings are unchanged. After updating, fully close and reopen
-YouTube Extended. Use the `apps-0.5.7.json` Homebrew feed for this build.
+YouTube Extended. This shortcut fix remains in the current build.
 
 ### Settings panel from 0.5.6
 
@@ -124,7 +171,7 @@ pnpm catalog
 pnpm catalog:check
 ```
 
-Install `youtube.leanback.v4_0.5.7_all.ipk` with webOS Dev Manager or the Homebrew
+Install `youtube.leanback.v4_0.5.8_all.ipk` with webOS Dev Manager or the Homebrew
 Channel. It uses the existing app ID so it updates the installed fork; retain the
 previous IPK if you need to roll back. Local code changes do not update the TV.
 
@@ -133,10 +180,10 @@ The existing feed address remains:
 Publish the matching source, **new IPK and generated apps.json together** to your
 GitHub `main` branch. Until then that URL continues serving the previously
 published version. jsDelivr may cache `@main`; verify the advertised version and
-SHA-256 before installing. The additional version-specific `apps-0.5.7.json` feed
+SHA-256 before installing. The additional version-specific `apps-0.5.8.json` feed
 can be used to avoid a previously cached feed URL. A commit-pinned feed such as
 `@bc12eea/apps.json` stays on its original version. Previous version-specific feeds
-also retain their original release; use `apps-0.5.7.json` for this release.
+also retain their original release; use `apps-0.5.8.json` for this release.
 `pnpm catalog:check` rejects stale version/size/hash metadata.
 
 See [TV validation and rollback](docs/TV-VALIDATION.md) for physical-device checks.

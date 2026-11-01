@@ -6,35 +6,51 @@ const pkg = require('../package.json');
 const app = require('../assets/appinfo.json');
 const root = path.join(__dirname, '..');
 const filename = `${app.id}_${pkg.version}_all.ipk`;
-const binary = fs.readFileSync(path.join(root, filename));
 const repository = pkg.repository.replace(/^github:/, '');
 const cdn = `https://cdn.jsdelivr.net/gh/${repository}@main`;
 const description =
   'Unofficial YouTube fork with a transparent Green-button settings panel, ad controls, picture framing/zoom, native HDR preference and sleep timer. HDR and resolution depend on the video and TV.';
+/** @param {{id: string, title: string, type: string}} info
+ * @param {string} text
+ * @param {string} shortDescription */
+function packageEntry(info, text, shortDescription) {
+  const ipk = `${info.id}_${pkg.version}_all.ipk`;
+  const bytes = fs.readFileSync(path.join(root, ipk));
+  return {
+    id: info.id,
+    title: info.title,
+    iconUri: `${cdn}/assets/largeIcon.png`,
+    manifest: {
+      id: info.id,
+      version: pkg.version,
+      type: info.type,
+      title: info.title,
+      appDescription: text,
+      iconUri: `${cdn}/assets/largeIcon.png`,
+      sourceUrl: `https://github.com/${repository}`,
+      rootRequired: false,
+      ipkUrl: `${cdn}/${ipk}`,
+      ipkHash: {
+        sha256: crypto.createHash('sha256').update(bytes).digest('hex')
+      },
+      ipkSize: bytes.length
+    },
+    shortDescription
+  };
+}
+const launcher = require('../launcher/appinfo.json');
 const catalog = {
   packages: [
-    {
-      id: app.id,
-      title: app.title,
-      iconUri: `${cdn}/assets/largeIcon.png`,
-      manifest: {
-        id: app.id,
-        version: pkg.version,
-        type: app.type,
-        title: app.title,
-        appDescription: description,
-        iconUri: `${cdn}/assets/largeIcon.png`,
-        sourceUrl: `https://github.com/${repository}`,
-        rootRequired: false,
-        ipkUrl: `${cdn}/${filename}`,
-        ipkHash: {
-          sha256: crypto.createHash('sha256').update(binary).digest('hex')
-        },
-        ipkSize: binary.length
-      },
-      shortDescription:
-        'Transparent Green-button settings with ad controls, zoom and sleep timer.'
-    }
+    packageEntry(
+      app,
+      description,
+      'Glass settings with audio/TV shortcuts, ad controls and picture zoom.'
+    ),
+    packageEntry(
+      launcher,
+      'Adds a separate LG Home icon that opens your existing YouTube Extended player. Install the player first. No video engine or settings are replaced.',
+      'LG Home icon for the installed YouTube Extended player.'
+    )
   ]
 };
 const target = path.join(root, 'apps.json');

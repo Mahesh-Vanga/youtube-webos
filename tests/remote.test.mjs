@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { runtime } from './runtime.mjs';
+import { setImmediate } from 'node:timers/promises';
 
 // Minimal focus/event model for the real dialog module. These tests exercise
 // key handling only; they make no claims about browser layout or TV latency.
@@ -84,7 +85,7 @@ async function dialogRuntime() {
     },
     globals: {
       document,
-      __YTAF_VERSION__: '0.5.7',
+      __YTAF_VERSION__: '0.5.8',
       MutationObserver: class {
         observe() {}
       },
@@ -229,7 +230,7 @@ test('category switching disables hidden controls and every category is reachabl
   const { document, panel, tabs, pages, key } = await dialogRuntime();
   key(document, 404);
   key(panel, 38);
-  for (let index = 1; index < 4; index++) {
+  for (let index = 1; index < tabs.length; index++) {
     key(panel, 39);
     assert.equal(document.activeElement, tabs[index]);
     pages.forEach((page, pageIndex) => {
@@ -247,6 +248,39 @@ test('category switching disables hidden controls and every category is reachabl
     );
     key(panel, 38);
   }
+});
+
+test('Audio & TV overlay opens real LG Sound settings and offers honest 5.1 fallback', async () => {
+  const { env, document, panel, tabs, pages, key } = await dialogRuntime();
+  key(document, 403);
+  tabs[4].click();
+  const buttons = pages[4].querySelectorAll('button');
+  document.querySelectorAll = () => [];
+  buttons[1].click();
+  assert.equal(panel.style.display, 'flex');
+  assert.ok(
+    pages[4]
+      .querySelectorAll('p')
+      .some((node) => node.textContent.includes('not exposed a visible 5.1'))
+  );
+  let parameters;
+  Object.assign(env.context.window, {
+    setTimeout: () => 1,
+    clearTimeout() {},
+    webOS: {
+      service: {
+        request: (_uri, options) => {
+          parameters = options.parameters;
+          options.onSuccess({ returnValue: true });
+        }
+      }
+    }
+  });
+  buttons[0].click();
+  await setImmediate();
+  assert.equal(parameters.id, 'com.palm.app.settings');
+  assert.equal(parameters.params.target, 'sound');
+  assert.equal(panel.style.display, 'none');
 });
 
 test('reopening Green always starts with Ads and keyboard tab stays in the dialog', async () => {
