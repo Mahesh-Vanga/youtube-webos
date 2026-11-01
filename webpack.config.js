@@ -94,7 +94,9 @@ const makeConfig = (_env, argv) => [
               }
             }
           },
-          { context: 'src', from: 'index.html' }
+          { context: 'src', from: 'index.html' },
+          { from: 'LICENSE' },
+          { from: 'NOTICE' }
         ]
       }),
       // babel doesn't transform top-level await.
@@ -102,6 +104,9 @@ const makeConfig = (_env, argv) => [
       // This plugin calls babel again to transform remove the `async` keyword usage after the fact.
       new TransformAsyncModulesPlugin({
         runtime: {
+          // The plugin types predate Babel's moduleName option. Use the same
+          // installed runtime as the source transform rather than @babel/runtime.
+          ...{ moduleName: '@babel/runtime-corejs3' },
           version: pkgJson.dependencies['@babel/runtime-corejs3'],
           absoluteRuntime: './node_modules/@babel/runtime-corejs3'
         }

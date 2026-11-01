@@ -1,9 +1,9 @@
 {
   "id": "youtube.leanback.v4",
-  "vendor": "webosbrew.org",
+  "vendor": "Mahesh Vanga (unofficial webosbrew fork)",
   "type": "web",
   "main": "index.html",
-  "title": "YouTube AdFree",
+  "title": "YouTube Extended",
   "icon": "icon.png",
   "largeIcon": "largeIcon.png",
   "mediumLargeIcon": "mediumLargeIcon.png",
@@ -15,9 +15,6 @@
   "bgImage": "bgImage.png",
   "resolution": "1920x1080",
   "uiRevision": "2",
-  "enable120Hz": true,
-  "disableFrameRateLimit": true,
-  "enableGpuRasterization": true,
   "support360Content": true,
   "checkUpdateOnLaunch": false,
   "accessibility": {
@@ -25,10 +22,7 @@
   },
   "vendorExtension": {
     "userAgent": "$browserName$/$browserVersion$ ($platformName$-$platformVersion$), _TV_O18/$firmwareVersion$ (LG, $modelName$, $networkMode$)",
-    "allowCrossDomain": true,
-    "enable120Hz": true,
-    "disableFrameRateLimit": true,
-    "enableGpuRasterization": true
+    "allowCrossDomain": true
   },
   "deeplinkingParams": "{\"contentTarget\":\"v=$CONTENTID\"}",
   "inAppSearchParams": "{\"target\":\"q=$SEARCH_KEYWORD\"}",

@@ -50,10 +50,7 @@ class PlayerManager
 
   #handlePlayerStateChange = () => {
     const current = this.#player.getPlayerStateObject();
-    const diff = diffPlayerState(
-      this.#lastPlayerState,
-      this.#player.getPlayerStateObject()
-    );
+    const diff = diffPlayerState(this.#lastPlayerState, current);
     this.#lastPlayerState = current;
 
     // Assume video ID hasn't changed if diff is empty.
@@ -63,9 +60,8 @@ class PlayerManager
 
     const currentVideoID = this.currentVideoID;
     if (this.#lastVideoID !== currentVideoID) {
-      if (!currentVideoID) throw new Error('unexpected `null` video ID');
-      this.#handleNewVideo(currentVideoID);
       this.#lastVideoID = currentVideoID;
+      if (currentVideoID) this.#handleNewVideo(currentVideoID);
     }
 
     if (diff.isPlaying) {
@@ -106,12 +102,6 @@ export async function getPlayerManager(): Promise<PlayerManager> {
     const player = await getPlayer();
     instance = new PlayerManager(player);
   }
-
-  instance.addEventListener('playbackStart', function (event) {
-    event.type;
-    event.currentTarget?.currentVideoID;
-    event.detail;
-  });
 
   return instance;
 }

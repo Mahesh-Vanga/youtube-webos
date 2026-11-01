@@ -18,6 +18,8 @@ jobs:
       - uses: ./.github/actions/setup-env
 
       - run: pnpm run build
+      - run: pnpm test
+      - run: pnpm run test:compat
       - run: pnpm run package
       - run: pnpm run manifest
 

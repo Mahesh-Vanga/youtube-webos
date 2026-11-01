@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>YouTube Extended — integration fixture</title>
+    <style>
+      html {
+        font:
+          18px Arial,
+          sans-serif;
+        color: #f5f5f7;
+        background: #14161d;
+      }
+      body {
+        margin: 3rem;
+      }
+      button {
+        padding: 0.75rem;
+        margin-right: 0.5rem;
+      }
+      #fixture-player {
+        margin-top: 3rem;
+        padding: 3rem;
+        background: linear-gradient(135deg, #263f56, #47334e);
+      }
+      [idomkey='player-bar-renderer'] {
+        position: relative;
+        margin-top: 3rem;
+      }
+      [idomkey='slider'] {
+        position: relative;
+        height: 8px;
+        width: 70%;
+      }
+      [idomkey='slider-background'] {
+        position: absolute;
+        inset: 0;
+        background: #777;
+      }
+      [idomkey='slider-progress'] {
+        position: absolute;
+        inset: 0;
+        width: 35%;
+        background: red;
+      }
+      [idomkey='controls'] {
+        margin-top: 1.5rem;
+      }
+      .ytaf-ui-container {
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Production script integration fixture</h1>
+    <p>This is a local test surface, not the live YouTube TV app.</p>
+    <button id="green">Green key — settings</button>
+    <button id="back">TV Back key</button>
+    <p id="capabilities"></p>
+    <div id="fixture-player" class="html5-video-player">
+      <h2>Player geometry check</h2>
+      <p>The native seek track stays above the transport buttons.</p>
+      <video></video>
+      <div idomkey="player-bar-renderer">
+        <div idomkey="slider">
+          <div idomkey="slider-background"></div>
+          <div idomkey="slider-progress"></div>
+        </div>
+        <div idomkey="controls">
+          <button>Previous</button><button>Play</button><button>Next</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      const nativeMSE = MediaSource.isTypeSupported;
+      const nativeCanPlay = HTMLMediaElement.prototype.canPlayType;
+      const originalScreen = [screen.width, screen.height, devicePixelRatio];
+      const player = document.querySelector('.html5-video-player');
+      Object.assign(player, {
+        getVideoData: () => ({ video_id: 'fixture' }),
+        getPlayerStateObject: () => ({ isPlaying: false }),
+        isInline: () => false,
+        getVideoStats: () => ({ el: 'leanback' }),
+        getAvailableQualityData: () => [],
+        getPlaybackQualityLabel: () => '',
+        setPlaybackQualityRange: () => {}
+      });
+      function FixtureCommand() {}
+      FixtureCommand.instance = { resolveCommand: () => {} };
+      window._yttv = { FixtureCommand };
+      function key(code) {
+        document.activeElement.dispatchEvent(
+          new KeyboardEvent('keydown', { keyCode: code, bubbles: true })
+        );
+      }
+      document.querySelector('#green').onclick = () => key(404);
+      // Keep the dialog's active checkbox focused when using the mouse to test Back.
+      document.querySelector('#back').onmousedown = (event) =>
+        event.preventDefault();
+      document.querySelector('#back').onclick = () => key(461);
+      setTimeout(() => {
+        const passed =
+          nativeMSE === MediaSource.isTypeSupported &&
+          nativeCanPlay === HTMLMediaElement.prototype.canPlayType &&
+          originalScreen.join() ===
+            [screen.width, screen.height, devicePixelRatio].join();
+        document.querySelector('#capabilities').textContent = passed
+          ? 'PASS: native codec checks and display dimensions unchanged'
+          : 'FAIL: capabilities changed';
+      }, 1000);
+    </script>
+    <script src="/userScript.js"></script>
+  </body>
+</html>

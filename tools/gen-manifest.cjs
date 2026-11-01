@@ -21,12 +21,11 @@ fs.writeFileSync(
     version: pkgJson.version,
     type: appinfo.type,
     title: appinfo.title,
-    // appDescription: appinfo.appDescription,
-    iconUri:
-      'https://raw.githubusercontent.com/webosbrew/youtube-webos/main/assets/largeIcon.png',
-    sourceUrl: 'https://github.com/webosbrew/youtube-webos',
+    iconUri: `https://cdn.jsdelivr.net/gh/${pkgJson.repository.replace(/^github:/, '')}@main/assets/largeIcon.png`,
+    sourceUrl: `https://github.com/${pkgJson.repository.replace(/^github:/, '')}`,
     rootRequired: false,
     ipkUrl: ipkfile,
+    ipkSize: fs.statSync(ipkfile).size,
     ipkHash: {
       sha256: ipkhash
     }

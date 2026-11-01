@@ -266,3 +266,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [0.1.0]: https://github.com/webosbrew/youtube-webos/compare/0.0.2...v0.1.0
 [0.0.2]: https://github.com/webosbrew/youtube-webos/compare/0.0.1...0.0.2
 [0.0.1]: https://github.com/webosbrew/youtube-webos/releases/tag/0.0.1
+
+# 0.5.4 — unofficial fork, 2026-11-01
+
+- Replace full-player slider positioning and opaque root backgrounds with scoped,
+  lightweight glass styling; retain native playback control geometry.
+- Remove fabricated Dolby/8K codec, display-dimension and 120 Hz capabilities.
+- Default to adaptive quality and select only playable formats when explicitly
+  opting into highest quality. Remove quality-change polling.
+- Preserve all search continuations and results while prioritizing recognized
+  songs. Sort Home shelves on each initial response without changing watch queues.
+- Fix remote color keys, dialog focus/scrolling, TV Back, frozen request handling,
+  thumbnail preference changes, and stale SponsorBlock initialization.
+- Generate and verify Homebrew metadata from the actual package; add regression
+  tests, fork attribution and a physical-TV validation guide.

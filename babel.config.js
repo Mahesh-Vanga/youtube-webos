@@ -26,6 +26,7 @@ function makeConfig(api) {
         '@babel/plugin-transform-runtime',
         {
           regenerator: false,
+          moduleName: '@babel/runtime-corejs3',
           version: babelruntimeVersion
         }
       ],
@@ -38,7 +39,7 @@ function makeConfig(api) {
            * The way pure polyfills work completely breaks wrapper chaining.
            * The new core will only wrap each global once, which will completely side-step the issue.
            */
-          exclude: ['es.json.parse', 'esnext.json.parse']
+          exclude: ['es.json.parse', 'esnext.json.parse', 'es.json.stringify']
         }
       ],
       [

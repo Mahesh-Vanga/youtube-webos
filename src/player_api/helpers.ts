@@ -20,7 +20,7 @@ export async function requireElement<E extends typeof Element>(
 
   const result = await waitForChildAdd(
     document.body,
-    (node): node is Element =>
+    (node: Node): node is Element =>
       node instanceof Element && node.matches(cssSelectors),
     true
   );

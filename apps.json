@@ -6,20 +6,20 @@
       "iconUri": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/assets/largeIcon.png",
       "manifest": {
         "id": "youtube.leanback.v4",
-        "version": "0.5.3",
+        "version": "0.5.4",
         "type": "web",
         "title": "YouTube Extended",
-        "appDescription": "YouTube with Apple Liquid Glass theme, Dolby 5.1 Surround, 120Hz refresh rate, 8K stream unlocking, and deep song search.",
+        "appDescription": "Unofficial YouTube fork with lightweight glass styling and music-first browsing. Playback formats depend on the TV and video.",
         "iconUri": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/assets/largeIcon.png",
         "sourceUrl": "https://github.com/Mahesh-Vanga/youtube-webos",
         "rootRequired": false,
-        "ipkUrl": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/youtube.leanback.v4_0.5.3_all.ipk",
+        "ipkUrl": "https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/youtube.leanback.v4_0.5.4_all.ipk",
         "ipkHash": {
-          "sha256": "58e18f8d81e14ddcd18233e1710175ff11f3ee19acf23947890336e2d2a78cf9"
+          "sha256": "e105d6b0a8a0f7fe136a44e9a7505306f1e5977fd36b0ab5bc64e9c2fba234ec"
         },
-        "ipkSize": 464344
+        "ipkSize": 471822
       },
-      "shortDescription": "YouTube with Apple Liquid Glass theme, Dolby 5.1 Surround, 120Hz, and 8K playback."
+      "shortDescription": "Glass-inspired YouTube with music-first browsing."
     }
   ]
 }

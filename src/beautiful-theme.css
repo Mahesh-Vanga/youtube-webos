@@ -1,153 +1,109 @@
-/* ==========================================================================
-   YouTube webOS - Ultra-Fast Zero-Lag Apple Glass Theme
-   Zero animation delay, zero layout shift, instant 60fps remote navigation
-   ========================================================================== */
-
-/* 1. Canvas Background: Deep OLED True Black */
-body,
-html,
-#content,
-.ytlr-app,
-ytlr-app {
-  background-color: #000000 !important;
-  color: #f5f5f7 !important;
+/* Original glass-inspired surfaces. Native geometry and hit targets are retained.
+   No blur, filters, transforms or compositor layers on scrolling/video surfaces. */
+.ytaf-glass {
+  color: #f5f5f7;
 }
 
-/* 2. Instant Zero-Lag Focus for Remote Navigation (No transitions, 0ms delay) */
-ytlr-tile-renderer,
-.ytlr-tile-renderer,
-[idomkey='tile-renderer'] {
-  border-radius: 12px !important;
-  transition: none !important;
+.ytaf-glass ytlr-tile-renderer,
+.ytaf-glass .ytlr-tile-renderer,
+.ytaf-glass [idomkey='tile-renderer'] {
+  border-radius: 0.75rem !important;
 }
 
-/* Instant Crisp Focus Highlight - Never changes layout geometry */
-ytlr-tile-renderer.zylon-focus,
-.ytlr-tile-renderer.zylon-focus,
-[idomkey='tile-renderer'].zylon-focus,
-.focused-item {
-  outline: 3px solid #ffffff !important;
-  outline-offset: 2px !important;
-  box-shadow: 0 0 18px rgba(0, 122, 255, 0.7) !important;
-  transition: none !important;
-  z-index: 20 !important;
+.ytaf-glass ytlr-tile-renderer.zylon-focus,
+.ytaf-glass .ytlr-tile-renderer.zylon-focus,
+.ytaf-glass [idomkey='tile-renderer'].zylon-focus {
+  outline: 0.16rem solid #f5f5f7 !important;
+  outline-offset: 0.12rem;
 }
 
-/* 3. Category Chips: Clean Frosted Glass Capsules */
-[idomkey='chip-cloud-chip-renderer'],
-.ytlr-chip-cloud-chip-renderer {
-  border-radius: 9999px !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  transition: none !important;
+.ytaf-glass [idomkey='chip-cloud-chip-renderer'],
+.ytaf-glass .ytlr-chip-cloud-chip-renderer {
+  border-radius: 2rem !important;
+  background: linear-gradient(
+    150deg,
+    rgba(255, 255, 255, 0.18),
+    rgba(255, 255, 255, 0.06)
+  ) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
 }
 
-[idomkey='chip-cloud-chip-renderer'].zylon-focus,
-.ytlr-chip-cloud-chip-renderer.zylon-focus {
-  background: rgba(255, 255, 255, 0.28) !important;
-  border-color: #ffffff !important;
+.ytaf-glass [idomkey='chip-cloud-chip-renderer'].zylon-focus,
+.ytaf-glass .ytlr-chip-cloud-chip-renderer.zylon-focus {
+  background: rgba(255, 255, 255, 0.3) !important;
   outline: 2px solid #ffffff !important;
-  transition: none !important;
 }
 
-/* 4. Unified Single Scrubber (Merge lower red slider onto transparent slide) */
-[idomkey='player-bar-renderer'] {
-  position: relative !important;
-}
-
-/* Place the slider directly on top of the transparent slide */
-[idomkey='player-bar-renderer'] [idomkey='slider'] {
-  position: absolute !important;
-  top: 0 !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-}
-
-/* Remove separate red track background below */
-[idomkey='player-bar-renderer'] [idomkey='slider'] [idomkey='slider-background'],
-[idomkey='player-bar-renderer'] [idomkey='slider'] [idomkey='slider-buffer'] {
-  background: transparent !important;
-}
-
-/* Match the red slider progress directly on the transparent slide */
-[idomkey='player-bar-renderer'] [idomkey='slider-progress'] {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.35) 0%, rgba(0, 122, 255, 0.75) 100%) !important;
-  border-radius: 9999px !important;
-}
-
-/* White glowing scrub thumb dot directly on the transparent bar */
-[idomkey='player-bar-renderer'] [idomkey='slider-thumb'],
-[idomkey='player-bar-renderer'] [idomkey='thumb'] {
-  background: #ffffff !important;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.95), 0 0 18px rgba(0, 122, 255, 0.7) !important;
-}
-
-/* 5. Dolby Audio Badge (Subtle Pill in Options) */
-.ytaf-dolby-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.3rem 0.65rem;
-  background: rgba(0, 122, 255, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #ffffff;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 1px;
-  border-radius: 6px;
-  text-transform: uppercase;
-  margin-left: 0.6rem;
-  vertical-align: middle;
-}
-
-/* 6. Settings Screen (Options Panel) */
-.ytaf-ui-container {
-  background: rgba(16, 18, 28, 0.94) !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  border-radius: 20px !important;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8) !important;
-  padding: 2rem 2.5rem !important;
-}
-
-.ytaf-ui-container h1 {
-  color: #ffffff !important;
-  font-weight: 700 !important;
-  margin-bottom: 1rem !important;
-  font-size: 1.8rem !important;
-}
-
-.ytaf-ui-container label {
-  padding: 0.5rem 1rem !important;
-  border-radius: 10px !important;
-  margin: 0.3rem 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.ytaf-ui-container label:hover,
-.ytaf-ui-container label:focus-within,
-.ytaf-ui-container :focus {
-  outline: 2px solid #ffffff !important;
+/* Style the existing seek track once; never create or reposition a second slider.
+   Leave buffer, chapters, previews and the native remote/pointer behavior intact. */
+.ytaf-glass [idomkey='player-bar-renderer'] [idomkey='slider-background'] {
   background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 2rem;
 }
 
-/* 7. Notifications */
-.ytaf-notification-container .message {
-  background: rgba(18, 20, 30, 0.9) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  border-radius: 9999px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
-  padding: 0.75rem 1.4rem !important;
-  font-weight: 600 !important;
-  color: #ffffff !important;
+.ytaf-glass [idomkey='player-bar-renderer'] [idomkey='slider-progress'] {
+  background: rgba(245, 245, 247, 0.85) !important;
+  border-radius: 2rem;
+}
+
+.ytaf-glass [idomkey='player-bar-renderer'] [idomkey='slider-thumb'],
+.ytaf-glass [idomkey='player-bar-renderer'] [idomkey='thumb'] {
+  background: #ffffff !important;
+}
+
+.ytaf-glass .ytaf-ui-container {
+  background: linear-gradient(
+    145deg,
+    rgba(45, 48, 56, 0.97),
+    rgba(17, 19, 25, 0.97)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 1.4rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 1rem 3rem rgba(0, 0, 0, 0.35);
+  padding: 1.5rem 2rem;
+}
+
+.ytaf-glass .ytaf-ui-container h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: -0.04rem;
+}
+
+.ytaf-glass .ytaf-ui-container label {
+  padding: 0.6rem 0.75rem;
+  margin: 0.25rem 0;
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ytaf-glass .ytaf-ui-container :focus {
+  outline: 2px solid #f5f5f7;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.ytaf-glass .ytaf-ui-container input {
+  accent-color: #b9d7ff;
+}
+
+.ytaf-glass .ytaf-notification-container .message {
+  background: rgba(28, 30, 38, 0.94);
+  border-radius: 1rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* Blur is opt-in and restricted to the stationary settings dialog. Older webOS
+   engines retain the opaque gradient fallback when unsupported. */
+@supports (backdrop-filter: blur(1px)) {
+  .ytaf-glass.ytaf-glass-blur .ytaf-ui-container {
+    background: rgba(24, 26, 33, 0.82);
+    backdrop-filter: blur(10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ytaf-notification-container .message {
+    transition: none;
+  }
 }

@@ -78,7 +78,7 @@ const configs = [
   {
     // Why doesn't ESLint do this by default is beyond me.
     files: ['**/*.c[jt]s'],
-    languageOptions: { sourceType: 'commonjs' }
+    languageOptions: { sourceType: 'commonjs', globals: { ...globals.node } }
   },
 
   {

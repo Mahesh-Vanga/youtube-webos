@@ -82,7 +82,8 @@ function removeAdSlotRenderer(sectionListRenderer) {
   );
   contentsWithShelfRenderer.forEach((content) => {
     const horizontalRenderer =
-      content.shelfRenderer.content.horizontalListRenderer;
+      content.shelfRenderer?.content?.horizontalListRenderer;
+    if (!Array.isArray(horizontalRenderer?.items)) return;
     horizontalRenderer.items = horizontalRenderer.items.filter(
       (elm) => !elm.adSlotRenderer
     );

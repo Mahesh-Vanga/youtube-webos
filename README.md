@@ -1,6 +1,102 @@
-<h1 align="center">
-  YouTube Ad-Free
-</h1>
+# YouTube Extended for webOS — unofficial fork
+
+Modified by Mahesh Vanga, 1 November 2026. Based on
+[webosbrew/youtube-webos](https://github.com/webosbrew/youtube-webos), with the
+original authors' source and GPL-3.0-only license retained. This fork is not
+endorsed by webosbrew, Google/YouTube, Apple, Dolby, or LG.
+
+## Version 0.5.4
+
+- Lightweight glass-inspired cards, chips, notifications and settings. Theme can
+  be disabled immediately with the green remote button; settings blur is optional
+  and off by default. Scrolling lists and video are never blurred.
+- Retains the native seek control, button positions, hit targets and chapter
+  markers. The existing seek track gets a translucent white finish without a
+  second overlay slider or an absolute-positioned full-height hit target.
+- Adaptive playback is the default, including a one-time reset of the previous
+  forced-quality setting. Highest _playable_ quality is optional in settings.
+- Real display size, pixel ratio and native audio/video capability checks are
+  preserved. Removed the previous fake 8K, Dolby and 120 Hz overrides.
+- Recognized music shelves come before news on the initial Home response. Videos
+  with readable view counts are ordered by views within shelves. Other shelf
+  categories are ordered by their highest recognized video view count.
+- Recognized songs are shown first within loaded search pages, preserving all
+  results, playlists and continuation tokens. Keep scrolling for further results
+  supplied by YouTube. This does not provide a complete music catalog or bypass
+  YouTube's search limits. Unknown/localized counts retain their positions.
+- Fixed remote color-key detection, settings scrolling and TV Back handling,
+  immutable request serialization, and stale SponsorBlock requests after switching
+  videos. Removed quality polling and per-command logging during normal use.
+
+### Your LG OLED55C2XSC
+
+This is a **4K, 120 Hz panel**, not an 8K panel. 120 Hz panel support does not make
+the webOS web engine or YouTube video render at 120 fps. This package does not
+force the system refresh rate. Use Auto quality for quickest track changes;
+select 2160p in YouTube when offered if you prefer 4K over adaptive buffering.
+
+Dolby/5.1 needs an appropriate source track, TV playback support and audio output
+setup. Use YouTube's native 5.1 setting when it appears; this fork cannot convert
+stereo songs into genuine Dolby Atmos. 8K is available only on a genuinely
+compatible device when YouTube supplies a playable format.
+
+Sources: [LG C2 specifications](https://www.lg.com/content/dam/lge/in/migration/catalogue-2023/pdf/OLED-g3-23.pdf),
+[YouTube 5.1 requirements](https://support.google.com/youtube/answer/11904456?hl=en),
+[LG webOS media capabilities](https://webostv.developer.lge.com/develop/specifications/video-audio-240).
+
+### Build, verify and publish this fork
+
+```sh
+pnpm install --frozen-lockfile
+pnpm test
+pnpm run lint:all
+pnpm build
+pnpm test:compat
+pnpm package
+pnpm catalog
+pnpm catalog:check
+```
+
+Install `youtube.leanback.v4_0.5.4_all.ipk` with webOS Dev Manager or the Homebrew
+Channel. It uses the existing app ID so it updates the installed fork; retain the
+previous IPK if you need to roll back. Local code changes do not update the TV.
+
+The existing feed address remains:
+[apps.json](https://cdn.jsdelivr.net/gh/Mahesh-Vanga/youtube-webos@main/apps.json).
+Publish the matching source, **new IPK and generated apps.json together** to your
+GitHub `main` branch. Until then that URL continues serving the previously
+published version. jsDelivr may cache `@main`; verify the advertised version and
+SHA-256 before installing, and use a commit-pinned URL when testing a release.
+`pnpm catalog:check` rejects stale version/size/hash metadata.
+
+See [TV validation and rollback](docs/TV-VALIDATION.md) for physical-device checks.
+The local integration fixture (`pnpm preview:fixture`, after building) exercises
+the production user script with simulated player elements. It cannot measure
+real-TV rendering or playback speed. Unit tests use Node's experimental VM module
+support to isolate browser globals.
+
+### Publishing rights and future maintenance
+
+The upstream project is GPL-3.0-only. You may publish a modified fork under that
+license: keep the license/copyright notices, identify your changes and dates,
+and provide the corresponding source and build scripts for each binary you
+distribute. The GPL does not grant trademark rights or permission to redistribute
+YouTube's proprietary service, videos, Apple's assets, or Dolby branding. This
+package contains the open-source wrapper; it loads YouTube's hosted TV interface
+online rather than bundling the complete YouTube service.
+
+Following the GPL addresses the upstream source license; it cannot guarantee
+there will never be a complaint. YouTube's terms and service changes are separate
+and can affect third-party clients. Private YouTube markup and APIs can change,
+so future UI or playback repairs may be required. No claim of zero errors,
+instant network video changes, Dolby certification or a guaranteed frame rate is
+made. See [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html) and
+[YouTube Terms](https://www.youtube.com/static?template=terms).
+
+---
+
+The original project's setup and feature documentation follows.
+
 <p align="center">
   <img src="https://img.shields.io/github/stars/webosbrew/youtube-webos?style=flat-square&logo=github" alt="GitHub Stars">
   <img src="https://img.shields.io/github/v/release/webosbrew/youtube-webos?style=flat-square" alt="Latest Release">

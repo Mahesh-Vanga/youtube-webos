@@ -1,3 +1,4 @@
+/* global __YTAF_VERSION__ */
 import {
   configAddChangeListener,
   configRead,
@@ -5,7 +6,6 @@ import {
   configGetDesc
 } from './config.js';
 import './ui.css';
-import './beautiful-theme.css';
 import { requireElement } from './player_api/helpers';
 
 const colorCodeMap = new Map([
@@ -54,31 +54,38 @@ function createOptionsPanel() {
   elmContainer.classList.add('ytaf-ui-container');
   elmContainer.style['display'] = 'none';
   elmContainer.setAttribute('tabindex', 0);
+  elmContainer.setAttribute('role', 'dialog');
+  elmContainer.setAttribute('aria-modal', 'true');
+  elmContainer.setAttribute('aria-labelledby', 'ytaf-settings-title');
 
   elmContainer.addEventListener(
     'keydown',
     (evt) => {
-      if (getKeyColor(evt.charCode) === 'green') {
+      const code = evt.keyCode || evt.which || evt.charCode;
+      if (getKeyColor(code) === 'green') {
         return;
       }
 
       // Fast, lightweight arrow navigation inside the options dialog
-      if ([37, 38, 39, 40].includes(evt.keyCode)) {
+      if ([37, 38, 39, 40, 9].includes(code)) {
         const inputs = Array.from(elmContainer.querySelectorAll('input'));
         const activeIdx = inputs.indexOf(document.activeElement);
-        if (evt.keyCode === 38 || evt.keyCode === 37) {
+        if (code === 38 || code === 37 || (code === 9 && evt.shiftKey)) {
           // Up / Left
           inputs[(activeIdx - 1 + inputs.length) % inputs.length]?.focus();
-        } else if (evt.keyCode === 40 || evt.keyCode === 39) {
+        } else {
           // Down / Right
           inputs[(activeIdx + 1) % inputs.length]?.focus();
         }
-      } else if (evt.keyCode === 13) {
-        if (evt instanceof KeyboardEvent) {
+      } else if (code === 13) {
+        if (!evt.repeat && document.activeElement.matches('input')) {
           document.activeElement.click();
         }
-      } else if (evt.keyCode === 27) {
+      } else if (code === 27 || code === 461) {
         showOptionsPanel(false);
+      } else if (code === 32) {
+        evt.stopPropagation();
+        return;
       }
 
       evt.preventDefault();
@@ -87,7 +94,13 @@ function createOptionsPanel() {
     true
   );
 
+  // Keep activation keypress/keyup events inside the modal, too. Green is
+  // handled by the document capture listener before it reaches the dialog.
+  elmContainer.addEventListener('keypress', (evt) => evt.stopPropagation());
+  elmContainer.addEventListener('keyup', (evt) => evt.stopPropagation());
+
   const elmHeading = document.createElement('h1');
+  elmHeading.id = 'ytaf-settings-title';
   elmHeading.textContent = 'webOS YouTube Extended';
   elmContainer.appendChild(elmHeading);
 
@@ -99,10 +112,10 @@ function createOptionsPanel() {
   elmContainer.appendChild(createConfigCheckbox('forceHighResVideo'));
   elmContainer.appendChild(createConfigCheckbox('removeEndscreen'));
   elmContainer.appendChild(createConfigCheckbox('autoAccountSelect'));
-  elmContainer.appendChild(createConfigCheckbox('enableDolbyAudio'));
   elmContainer.appendChild(createConfigCheckbox('enableFeedPrioritization'));
   elmContainer.appendChild(createConfigCheckbox('enableExtendedSongSearch'));
   elmContainer.appendChild(createConfigCheckbox('enableModernTheme'));
+  elmContainer.appendChild(createConfigCheckbox('enableGlassBlur'));
   elmContainer.appendChild(createConfigCheckbox('enableSponsorBlock'));
 
   const elmBlock = document.createElement('blockquote');
@@ -123,6 +136,12 @@ function createOptionsPanel() {
     'Sponsor segments skipping - https://sponsor.ajay.app';
   elmContainer.appendChild(elmSponsorLink);
 
+  const attribution = document.createElement('p');
+  attribution.className = 'ytaf-ui-sponsor';
+  attribution.textContent =
+    'Unofficial fork by Mahesh Vanga · Based on webosbrew/youtube-webos · GPL-3.0-only · No warranty. Source: github.com/Mahesh-Vanga/youtube-webos';
+  elmContainer.appendChild(attribution);
+
   const version = document.createElement('div');
   version.className = 'ytaf-ui-version';
   version.textContent = `v${__YTAF_VERSION__}`;
@@ -136,37 +155,40 @@ const optionsPanel = createOptionsPanel();
 document.body.appendChild(optionsPanel);
 
 let optionsPanelVisible = false;
+let previousFocus = null;
 
 function showOptionsPanel(visible) {
   visible ??= true;
 
   if (visible && !optionsPanelVisible) {
     optionsPanel.style.display = 'block';
-    optionsPanel.focus();
+    previousFocus = document.activeElement;
+    optionsPanel.querySelector('input').focus();
     optionsPanelVisible = true;
   } else if (!visible && optionsPanelVisible) {
     optionsPanel.style.display = 'none';
-    optionsPanel.blur();
     optionsPanelVisible = false;
+    if (previousFocus?.isConnected) previousFocus.focus();
   }
 }
 
 window.ytaf_showOptionsPanel = showOptionsPanel;
 
 const eventHandler = (evt) => {
-  if (getKeyColor(evt.charCode) === 'green') {
+  const color = getKeyColor(evt.keyCode || evt.which || evt.charCode);
+  if (color === 'green') {
     evt.preventDefault();
     evt.stopPropagation();
 
-    if (evt.type === 'keydown') {
+    if (evt.type === 'keydown' && !evt.repeat) {
       showOptionsPanel(!optionsPanelVisible);
     }
     return false;
-  } else if (getKeyColor(evt.charCode) === 'blue') {
+  } else if (color === 'blue' && !optionsPanelVisible) {
     evt.preventDefault();
     evt.stopPropagation();
 
-    if (evt.type === 'keydown') {
+    if (evt.type === 'keydown' && !evt.repeat) {
       initAudioOnlyToggle();
     }
     return false;

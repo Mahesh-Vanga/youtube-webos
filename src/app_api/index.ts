@@ -30,12 +30,9 @@ export class ResolveCommandRegistry {
     command: Record<string, unknown>,
     extra?: unknown
   ) => {
-    console.group(`[${this.constructor.name}] Resolving`);
-    console.debug(`Command:`);
-    console.debug(command);
-    console.debug(`Extra:`);
-    console.debug(extra);
-    console.groupEnd();
+    if (window.__ytaf_debug__) {
+      console.debug(`[${this.constructor.name}] Resolving`, command, extra);
+    }
 
     for (const key of Object.keys(command)) {
       if (this.#cmds.has(key)) {
@@ -102,7 +99,7 @@ export class ResolveCommandRegistry {
         if (hook) {
           resolve(hook);
         } else {
-          setTimeout(poll, 0);
+          setTimeout(poll, 100);
         }
       };
       poll();

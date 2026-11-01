@@ -1,0 +1,18 @@
+YouTube Extended for webOS — unofficial modified fork
+
+Modified by Mahesh Vanga, 1 November 2026.
+Version 0.5.4 changes include lightweight glass styling, native media capability
+restoration, remote navigation fixes and continuation-preserving content ordering.
+
+Based on webosbrew/youtube-webos and its contributors.
+Upstream: https://github.com/webosbrew/youtube-webos
+Corresponding source and build instructions:
+https://github.com/Mahesh-Vanga/youtube-webos
+
+Licensed under GNU GPL version 3 only. See LICENSE for full terms.
+This software is provided without warranty; see LICENSE sections 15 and 16.
+
+This fork is not endorsed by webosbrew, Google/YouTube, Apple, Dolby or LG.
+The package contains the open-source wrapper and modifications, not YouTube's
+proprietary hosted service or its video catalog. Other names and trademarks
+belong to their respective owners.

@@ -59,8 +59,8 @@ const configOptions = new Map([
   [
     'forceHighResVideo',
     {
-      default: true,
-      desc: 'Force 8K / 4K max resolution playback'
+      default: false,
+      desc: 'Prefer highest supported quality (may increase buffering)'
     }
   ],
   [
@@ -78,10 +78,10 @@ const configOptions = new Map([
     }
   ],
   [
-    'enableDolbyAudio',
+    'enableGlassBlur',
     {
-      default: true,
-      desc: 'Enable Dolby Audio (5.1 Surround & E-AC-3)'
+      default: false,
+      desc: 'Frosted settings background (uses more graphics power)'
     }
   ],
   [
@@ -95,14 +95,14 @@ const configOptions = new Map([
     'enableExtendedSongSearch',
     {
       default: true,
-      desc: 'Deep song search & complete catalogs'
+      desc: 'Show songs first in loaded search results'
     }
   ],
   [
     'enableModernTheme',
     {
       default: true,
-      desc: 'Modern OLED theme & glowing aesthetics'
+      desc: 'Glass-inspired theme'
     }
   ]
 ]);
@@ -125,15 +125,20 @@ const configFrags = (() => {
 })();
 
 function loadStoredConfig() {
-  const storage = window.localStorage.getItem(CONFIG_KEY);
-
-  if (storage === null) {
-    console.info('Config not set; using defaults.');
-    return null;
-  }
-
   try {
-    return JSON.parse(storage);
+    const storage = window.localStorage.getItem(CONFIG_KEY);
+    if (storage === null) return null;
+    const stored = JSON.parse(storage);
+    if (!stored || typeof stored !== 'object' || Array.isArray(stored))
+      return null;
+    const values = Object.create(null);
+    for (const key of configOptions.keys()) {
+      if (typeof stored[key] === 'boolean') values[key] = stored[key];
+    }
+    // Reset the old forced bitrate default once, then retain user choices.
+    if (stored.settingsRevision !== 1) values.forceHighResVideo = false;
+    values.settingsRevision = 1;
+    return values;
   } catch (err) {
     console.warn('Error parsing stored config:', err);
     return null;
@@ -184,7 +189,15 @@ export function configWrite(key, value) {
 
   console.info('Changing key', key, 'from', oldValue, 'to', value);
   localConfig[key] = value;
-  window.localStorage[CONFIG_KEY] = JSON.stringify(localConfig);
+  localConfig.settingsRevision = 1;
+  try {
+    window.localStorage.setItem(CONFIG_KEY, JSON.stringify(localConfig));
+  } catch (err) {
+    console.warn(
+      'Could not persist settings; using them for this session.',
+      err
+    );
+  }
 
   configFrags[key].dispatchEvent(
     new CustomEvent('ytafConfigChange', {

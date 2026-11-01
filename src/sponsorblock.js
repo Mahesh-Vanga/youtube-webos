@@ -80,7 +80,9 @@ class SponsorBlockHandler {
         JSON.stringify(categories)
       )}`
     );
+    if (!this.active || !resp.ok) return;
     const results = await resp.json();
+    if (!this.active || !Array.isArray(results)) return;
 
     const result = results.find((v) => v.videoID === this.videoID);
     console.debug(this.videoID, 'Got it:', result);
@@ -151,7 +153,12 @@ class SponsorBlockHandler {
       return;
     }
 
-    if (!this.video || !this.video.duration) {
+    if (
+      !this.active ||
+      !this.video ||
+      !Number.isFinite(this.video.duration) ||
+      !this.video.duration
+    ) {
       console.debug('No video duration yet');
       return;
     }
@@ -201,6 +208,7 @@ class SponsorBlockHandler {
           case 2: {
             // Slider has no markers or auto-markers
             this.slider = last.querySelector('[idomkey=slider]');
+            if (!this.slider) return;
             break;
           }
           default: {
@@ -395,7 +403,9 @@ window.addEventListener(
 
       if (configRead('enableSponsorBlock')) {
         window.sponsorblock = new SponsorBlockHandler(videoID);
-        window.sponsorblock.init();
+        window.sponsorblock.init().catch((err) => {
+          console.warn('SponsorBlock unavailable for this video:', err);
+        });
       } else {
         console.info('SponsorBlock disabled, not loading');
       }
