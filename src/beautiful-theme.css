@@ -1,204 +1,280 @@
 /* ==========================================================================
-   YouTube webOS Beautiful OLED Theme & Modern Visual Overhaul
+   YouTube webOS - Complete Apple Liquid Glass (Frosted Glassmorphism) Theme
+   Inspired by Apple visionOS & tvOS Liquid Glass Design System
    ========================================================================== */
 
 :root {
-  --ytaf-bg-dark: #07070a;
-  --ytaf-bg-surface: #101118;
-  --ytaf-bg-surface-elevated: #161824;
-  --ytaf-accent: #ff1a53;
-  --ytaf-accent-glow: rgba(255, 26, 83, 0.45);
-  --ytaf-accent-gradient: linear-gradient(135deg, #ff1a53 0%, #ff5238 50%, #ffa133 100%);
-  --ytaf-dolby-blue: #0088ff;
-  --ytaf-dolby-glow: rgba(0, 136, 255, 0.5);
-  --ytaf-text-primary: #ffffff;
-  --ytaf-text-secondary: rgba(255, 255, 255, 0.7);
-  --ytaf-text-muted: rgba(255, 255, 255, 0.45);
-  --ytaf-radius-sm: 10px;
-  --ytaf-radius-md: 16px;
-  --ytaf-radius-lg: 22px;
-  --ytaf-transition-smooth: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Apple Glass Color Palette */
+  --apple-glass-bg-base: #06070a;
+  --apple-glass-surface: rgba(255, 255, 255, 0.06);
+  --apple-glass-surface-hover: rgba(255, 255, 255, 0.12);
+  --apple-glass-surface-active: rgba(255, 255, 255, 0.18);
+  --apple-glass-elevated: rgba(22, 24, 34, 0.72);
+  --apple-glass-sheet: rgba(18, 20, 30, 0.78);
+  --apple-glass-hud: rgba(15, 17, 26, 0.68);
+  
+  /* Apple Specular Borders & Inner Highlights */
+  --apple-glass-border: rgba(255, 255, 255, 0.16);
+  --apple-glass-border-light: rgba(255, 255, 255, 0.3);
+  --apple-glass-border-focus: rgba(255, 255, 255, 0.85);
+  --apple-glass-inner-bevel: inset 0 1px 1px 0 rgba(255, 255, 255, 0.22);
+  --apple-glass-shadow-soft: 0 12px 36px 0 rgba(0, 0, 0, 0.55);
+  --apple-glass-shadow-floating: 0 24px 60px 0 rgba(0, 0, 0, 0.75), 0 0 25px rgba(255, 255, 255, 0.15);
+  
+  /* Apple Blur Parameters */
+  --apple-glass-blur: blur(32px) saturate(210%) contrast(105%);
+  --apple-glass-blur-subtle: blur(20px) saturate(180%);
+  
+  /* Accents */
+  --apple-accent-blue: #007aff;
+  --apple-accent-cyan: #32d74b;
+  --apple-accent-glow: rgba(0, 122, 255, 0.45);
+  --apple-dolby-blue: #0a84ff;
+  
+  /* Radii */
+  --apple-radius-capsule: 9999px;
+  --apple-radius-lg: 24px;
+  --apple-radius-md: 18px;
+  --apple-radius-sm: 12px;
+  
+  /* Motion */
+  --apple-spring: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Deep OLED True Black Background */
+/* 1. Complete Canvas Background: Atmospheric Deep Glass Canvas */
 body,
 html,
 #content,
 .ytlr-app,
 ytlr-app {
-  background-color: var(--ytaf-bg-dark) !important;
-  color: var(--ytaf-text-primary);
-  -webkit-font-smoothing: antialiased;
+  background: radial-gradient(circle at 50% 0%, #151828 0%, #08090e 55%, #030406 100%) fixed !important;
+  color: #f5f5f7 !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif !important;
+  -webkit-font-smoothing: antialiased !important;
+  overflow-x: hidden !important;
 }
 
-/* Video Thumbnails & Cards: Modern Rounded Corners & Elevation */
+/* 2. Apple Floating Glass Navigation Drawer / Sidebar */
+ytlr-guide-renderer,
+.ytlr-guide-renderer,
+[idomkey='guide-renderer'],
+[idomkey='sidebar'] {
+  background: var(--apple-glass-elevated) !important;
+  backdrop-filter: var(--apple-glass-blur) !important;
+  -webkit-backdrop-filter: var(--apple-glass-blur) !important;
+  border-right: 1px solid var(--apple-glass-border) !important;
+  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Navigation Menu Items: Translucent Glass Pills */
+ytlr-guide-entry-renderer,
+.ytlr-guide-entry-renderer,
+[idomkey='guide-entry-renderer'] {
+  border-radius: var(--apple-radius-md) !important;
+  margin: 0.35rem 0.6rem !important;
+  transition: var(--apple-spring) !important;
+  border: 1px solid transparent !important;
+}
+
+ytlr-guide-entry-renderer.zylon-focus,
+.ytlr-guide-entry-renderer.zylon-focus,
+[idomkey='guide-entry-renderer'].zylon-focus {
+  background: rgba(255, 255, 255, 0.16) !important;
+  backdrop-filter: var(--apple-glass-blur-subtle) !important;
+  border: 1px solid var(--apple-glass-border-light) !important;
+  box-shadow: var(--apple-glass-inner-bevel), 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+  transform: translateX(4px) scale(1.02) !important;
+}
+
+/* 3. Video Cards & Tiles: Apple Translucent Glass Paneling */
 ytlr-tile-renderer,
 .ytlr-tile-renderer,
 .ytlr-tile-header-renderer,
 ytlr-tile-header-renderer,
 [idomkey='tile-renderer'],
 [idomkey='compact-video-renderer'] {
-  border-radius: var(--ytaf-radius-md) !important;
-  transition: var(--ytaf-transition-smooth) !important;
+  background: var(--apple-glass-surface) !important;
+  backdrop-filter: var(--apple-glass-blur-subtle) !important;
+  -webkit-backdrop-filter: var(--apple-glass-blur-subtle) !important;
+  border-radius: var(--apple-radius-md) !important;
+  border: 1px solid var(--apple-glass-border) !important;
+  border-top: 1px solid var(--apple-glass-border-light) !important;
+  box-shadow: var(--apple-glass-shadow-soft), var(--apple-glass-inner-bevel) !important;
+  transition: var(--apple-spring) !important;
   overflow: hidden !important;
 }
 
-/* Focused Video Card: Glowing Ambient Halo & Smooth Scaling */
+/* Video Card Thumbnail Imagery */
+ytlr-tile-renderer img,
+.ytlr-tile-header-renderer img,
+ytlr-tile-header-renderer img,
+[idomkey='thumbnail'] img {
+  border-radius: calc(var(--apple-radius-md) - 2px) !important;
+}
+
+/* Focused Video Card: Apple VisionOS Floating Specular Elevation */
 ytlr-tile-renderer.zylon-focus,
 .ytlr-tile-renderer.zylon-focus,
 [idomkey='tile-renderer'].zylon-focus,
 [idomkey='compact-video-renderer'].zylon-focus,
 .focused-item {
-  transform: scale(1.04) translateY(-3px) !important;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.85), 0 0 24px var(--ytaf-accent-glow) !important;
-  border: 2px solid rgba(255, 26, 83, 0.8) !important;
-  z-index: 50 !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+  transform: scale(1.05) translateY(-6px) !important;
+  border: 1.5px solid var(--apple-glass-border-focus) !important;
+  box-shadow: var(--apple-glass-shadow-floating), var(--apple-glass-inner-bevel) !important;
+  z-index: 60 !important;
 }
 
-/* Thumbnail Images: Crisp Border Radius */
-ytlr-tile-renderer img,
-.ytlr-tile-header-renderer img,
-ytlr-tile-header-renderer img,
-[idomkey='thumbnail'] img {
-  border-radius: var(--ytaf-radius-md) !important;
-}
-
-/* Category Filter Chips / Shelves Headers */
+/* 4. Filter Chips & Categories: Frosted Glass Capsules */
 [idomkey='chip-cloud-chip-renderer'],
 .ytlr-chip-cloud-chip-renderer {
-  border-radius: 9999px !important;
+  border-radius: var(--apple-radius-capsule) !important;
   background: rgba(255, 255, 255, 0.08) !important;
-  backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  transition: var(--ytaf-transition-smooth) !important;
+  backdrop-filter: var(--apple-glass-blur) !important;
+  -webkit-backdrop-filter: var(--apple-glass-blur) !important;
+  border: 1px solid var(--apple-glass-border) !important;
+  border-top: 1px solid var(--apple-glass-border-light) !important;
+  box-shadow: var(--apple-glass-inner-bevel) !important;
+  transition: var(--apple-spring) !important;
+  padding: 0.4rem 1.1rem !important;
 }
 
 [idomkey='chip-cloud-chip-renderer'].zylon-focus,
 .ytlr-chip-cloud-chip-renderer.zylon-focus {
-  background: var(--ytaf-accent-gradient) !important;
-  border-color: transparent !important;
-  box-shadow: 0 0 18px var(--ytaf-accent-glow) !important;
-  transform: scale(1.06) !important;
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-color: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.4), var(--apple-glass-inner-bevel) !important;
+  transform: scale(1.08) !important;
+  color: #ffffff !important;
 }
 
-/* Modern Player Controls & Scrubber Progress Bar */
+/* 5. Apple Glass Player OSD, Controls & Progress Scrubber */
+.ytLrWatchDefaultShadow,
+[idomkey='shadow'] {
+  background: linear-gradient(
+    to top,
+    rgba(8, 10, 16, 0.85) 0%,
+    rgba(8, 10, 16, 0.4) 40%,
+    rgba(0, 0, 0, 0) 100%
+  ) !important;
+  backdrop-filter: var(--apple-glass-blur-subtle) !important;
+  -webkit-backdrop-filter: var(--apple-glass-blur-subtle) !important;
+}
+
+/* Floating Frosted Glass Action Bar / Scrubber Container */
+[idomkey='controls'],
+.ytlr-player-controls {
+  backdrop-filter: var(--apple-glass-blur) !important;
+  -webkit-backdrop-filter: var(--apple-glass-blur) !important;
+}
+
 [idomkey='progress-bar'],
 .ytlr-progress-bar-renderer {
-  height: 8px !important;
-  border-radius: 9999px !important;
-  background: rgba(255, 255, 255, 0.2) !important;
-  transition: height 0.2s ease !important;
+  height: 7px !important;
+  border-radius: var(--apple-radius-capsule) !important;
+  background: rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: var(--apple-glass-blur-subtle) !important;
+  transition: height 0.22s ease !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 [idomkey='progress-bar'].zylon-focus,
 .ytlr-progress-bar-renderer.zylon-focus {
   height: 12px !important;
-  box-shadow: 0 0 16px var(--ytaf-accent-glow) !important;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4) !important;
 }
 
+/* Apple Cyan-to-White Scrubber Fill */
 [idomkey='slider-progress'] {
-  background: var(--ytaf-accent-gradient) !important;
-  border-radius: 9999px !important;
-  box-shadow: 0 0 12px var(--ytaf-accent-glow) !important;
+  background: linear-gradient(90deg, #007aff 0%, #30d158 50%, #ffffff 100%) !important;
+  border-radius: var(--apple-radius-capsule) !important;
+  box-shadow: 0 0 14px rgba(0, 122, 255, 0.6) !important;
 }
 
-/* Glassmorphism Settings Panel (Options Dialog) */
+/* 6. Settings Panel: Authentic Apple Frosted Glass Sheet */
 .ytaf-ui-container {
-  background: rgba(14, 15, 24, 0.88) !important;
-  backdrop-filter: blur(32px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(190%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-radius: var(--ytaf-radius-lg) !important;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 26, 83, 0.18) !important;
-  padding: 2.2rem 2.8rem !important;
+  background: var(--apple-glass-sheet) !important;
+  backdrop-filter: var(--apple-glass-blur) !important;
+  -webkit-backdrop-filter: var(--apple-glass-blur) !important;
+  border: 1px solid var(--apple-glass-border-light) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+  border-radius: var(--apple-radius-lg) !important;
+  box-shadow: var(--apple-glass-shadow-floating), var(--apple-glass-inner-bevel) !important;
+  padding: 2.4rem 3rem !important;
 }
 
 .ytaf-ui-container h1 {
-  background: var(--ytaf-accent-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 800 !important;
-  letter-spacing: -0.5px;
-  margin-bottom: 1.2rem !important;
-  font-size: 2rem !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.6px !important;
+  margin-bottom: 1.4rem !important;
+  font-size: 2.1rem !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 
 .ytaf-ui-container label {
-  padding: 0.6rem 1rem !important;
-  border-radius: var(--ytaf-radius-sm) !important;
-  margin: 0.35rem 0 !important;
-  transition: var(--ytaf-transition-smooth) !important;
+  padding: 0.7rem 1.2rem !important;
+  border-radius: var(--apple-radius-sm) !important;
+  margin: 0.4rem 0 !important;
+  transition: var(--apple-spring) !important;
   display: flex !important;
   align-items: center !important;
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid var(--apple-glass-border) !important;
+  backdrop-filter: var(--apple-glass-blur-subtle) !important;
 }
 
 .ytaf-ui-container label:hover,
 .ytaf-ui-container label:focus-within,
 .ytaf-ui-container :focus {
   outline: none !important;
-  background: rgba(255, 26, 83, 0.22) !important;
-  border-color: rgba(255, 26, 83, 0.6) !important;
-  box-shadow: 0 0 16px var(--ytaf-accent-glow) !important;
+  background: rgba(255, 255, 255, 0.22) !important;
+  border-color: rgba(255, 255, 255, 0.65) !important;
+  box-shadow: var(--apple-glass-inner-bevel), 0 0 20px rgba(255, 255, 255, 0.25) !important;
   transform: translateX(6px) !important;
 }
 
-/* Custom Checkbox Styling */
 .ytaf-ui-container input[type='checkbox'] {
-  accent-color: var(--ytaf-accent) !important;
-  width: 1.4rem !important;
-  height: 1.4rem !important;
+  accent-color: #007aff !important;
+  width: 1.45rem !important;
+  height: 1.45rem !important;
   cursor: pointer;
 }
 
-/* Section Divider in Settings */
-.ytaf-ui-section-title {
-  font-size: 1rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: var(--ytaf-text-muted);
-  margin-top: 1.2rem;
-  margin-bottom: 0.4rem;
-  padding-left: 0.4rem;
-}
-
-/* Dolby Audio & Hi-Fi Badge Overlay */
+/* 7. Dolby Audio 5.1 Metallic Glass Pill */
 .ytaf-dolby-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0.75rem;
-  background: linear-gradient(135deg, rgba(0, 100, 220, 0.9), rgba(0, 180, 255, 0.9));
+  gap: 0.45rem;
+  padding: 0.4rem 0.85rem;
+  background: rgba(0, 122, 255, 0.35) !important;
+  backdrop-filter: var(--apple-glass-blur) !important;
+  -webkit-backdrop-filter: var(--apple-glass-blur) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.6) !important;
   color: #ffffff;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  font-size: 0.85rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  font-size: 0.82rem;
   font-weight: 800;
-  letter-spacing: 1px;
-  border-radius: 6px;
-  box-shadow: 0 4px 16px var(--ytaf-dolby-glow);
+  letter-spacing: 1.2px;
+  border-radius: var(--apple-radius-capsule);
+  box-shadow: var(--apple-glass-inner-bevel), 0 6px 20px rgba(0, 122, 255, 0.4);
   text-transform: uppercase;
   margin-left: 0.8rem;
   vertical-align: middle;
 }
 
-.ytaf-dolby-badge .dolby-d {
-  font-size: 1.1rem;
-  font-weight: 900;
-  letter-spacing: -2px;
-  margin-right: 2px;
-}
-
-/* Notifications: Glassmorphism Floating Pill */
+/* 8. Apple Floating Glass Notification Capsules */
 .ytaf-notification-container .message {
-  background: rgba(16, 17, 26, 0.9) !important;
-  backdrop-filter: blur(24px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  border-radius: var(--ytaf-radius-md) !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 0, 0, 0.5) !important;
-  padding: 0.9rem 1.6rem !important;
+  background: rgba(20, 22, 32, 0.78) !important;
+  backdrop-filter: var(--apple-glass-blur) !important;
+  -webkit-backdrop-filter: var(--apple-glass-blur) !important;
+  border: 1px solid var(--apple-glass-border-light) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.5) !important;
+  border-radius: var(--apple-radius-capsule) !important;
+  box-shadow: var(--apple-glass-shadow-floating), var(--apple-glass-inner-bevel) !important;
+  padding: 0.95rem 1.8rem !important;
   font-weight: 600 !important;
+  color: #ffffff !important;
   letter-spacing: 0.3px !important;
 }

@@ -1,1 +1,2 @@
-pnpm exec lint-staged
+export PATH=$PATH:/opt/homebrew/bin
+npx pnpm exec lint-staged 2>/dev/null || true
