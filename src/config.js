@@ -76,6 +76,34 @@ const configOptions = new Map([
       default: false,
       desc: 'Bypass initial account selection on startup'
     }
+  ],
+  [
+    'enableDolbyAudio',
+    {
+      default: true,
+      desc: 'Enable Dolby Audio (5.1 Surround & E-AC-3)'
+    }
+  ],
+  [
+    'enableFeedPrioritization',
+    {
+      default: true,
+      desc: 'Prioritize Music & News feeds by views'
+    }
+  ],
+  [
+    'enableExtendedSongSearch',
+    {
+      default: true,
+      desc: 'Deep song search & complete catalogs'
+    }
+  ],
+  [
+    'enableModernTheme',
+    {
+      default: true,
+      desc: 'Modern OLED theme & glowing aesthetics'
+    }
   ]
 ]);
 

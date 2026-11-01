@@ -1,3 +1,5 @@
+import { injectDolbyContext } from '../dolby-audio';
+
 function isPrimitive(
   value: unknown
 ): value is string | number | boolean | null | undefined | symbol | bigint {
@@ -16,14 +18,19 @@ function stringify(
 ): string {
   if (!isPrimitive(value)) {
     value = structuredClone(value);
-    // TODO: add below to a dump-level logger
-    // console.debug('JSON.stringify', value, replacer, space);
 
-    // @ts-expect-error TS doesn't allow optional chaining on `unknown`. See: https://github.com/microsoft/TypeScript/issues/37700
+    // @ts-expect-error TS doesn't allow optional chaining on `unknown`.
     const ctx = value?.playbackContext?.contentPlaybackContext as unknown;
     if (!isPrimitive(ctx)) {
       (ctx as Record<string, unknown>).isInlinePlaybackNoAd = true;
       console.info(`[JSON.stringify] Set isInlinePlaybackNoAd`);
+    }
+
+    // Inject Dolby Audio / 5.1 Surround capabilities into playback and client contexts
+    try {
+      value = injectDolbyContext(value);
+    } catch (e) {
+      console.warn('[JSON.stringify] Failed to inject Dolby context:', e);
     }
   }
 

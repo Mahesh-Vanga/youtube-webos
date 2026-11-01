@@ -29,3 +29,7 @@ import './remove-endscreen';
 import './hooks';
 import './block-webos-cast';
 import './auto-account-select';
+import './beautiful-theme.css';
+import './dolby-audio';
+import './feed-prioritization';
+import './search-enhancer';

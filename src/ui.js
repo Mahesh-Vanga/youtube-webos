@@ -7,6 +7,7 @@ import {
   configGetDesc
 } from './config.js';
 import './ui.css';
+import './beautiful-theme.css';
 import { requireElement } from './player_api/helpers';
 
 // We handle key events ourselves.
@@ -130,6 +131,10 @@ function createOptionsPanel() {
   elmContainer.appendChild(createConfigCheckbox('forceHighResVideo'));
   elmContainer.appendChild(createConfigCheckbox('removeEndscreen'));
   elmContainer.appendChild(createConfigCheckbox('autoAccountSelect'));
+  elmContainer.appendChild(createConfigCheckbox('enableDolbyAudio'));
+  elmContainer.appendChild(createConfigCheckbox('enableFeedPrioritization'));
+  elmContainer.appendChild(createConfigCheckbox('enableExtendedSongSearch'));
+  elmContainer.appendChild(createConfigCheckbox('enableModernTheme'));
   elmContainer.appendChild(createConfigCheckbox('enableSponsorBlock'));
 
   const elmBlock = document.createElement('blockquote');
